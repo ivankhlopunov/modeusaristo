@@ -1,39 +1,44 @@
 
 import streamlit as st
+from api import send_request
 
-# Настройки страницы
 st.set_page_config(
     page_title="Исследование профессий",
     page_icon="🔎",
     layout="wide"
 )
 
-# Заголовок приложения
 st.title("Исследование профессиональной деятельности")
 
-# Описание приложения
 st.write(
     "Мультиагентная система исследования профессий"
 )
 
-# Поле для ввода профессии
 profession = st.text_input(
     "Введите название профессии",
     placeholder="Например: Разработчик ПО"
 )
 
-# Дополнительное описание
 description = st.text_area(
     "Дополнительное описание (необязательно)"
 )
 
-# Кнопка запуска исследования
 if st.button("Начать исследование"):
 
     if profession.strip():
-        st.success(
-            f"Исследование профессии «{profession}» подготовлено к запуску."
+
+        result = send_request(
+            profession.strip(),
+            description.strip()
         )
+
+        if result:
+            st.success("Ответ успешно получен!")
+
+            st.json(result["json"])
+
+        else:
+            st.error("Не удалось получить ответ от сервера.")
 
     else:
         st.warning("Введите название профессии.")
