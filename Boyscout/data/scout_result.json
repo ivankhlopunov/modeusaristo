@@ -1,0 +1,58 @@
+{
+    "profession": "Python Developer",
+    "status": "success",
+    "data_mode": "mock",
+    "vacancies": [
+        {
+            "id": "mock-001",
+            "name": "Python Developer",
+            "company": "Demo Company",
+            "salary": null,
+            "experience": "Нет опыта",
+            "skills": [
+                "Базовые профессиональные знания",
+                "Работа в команде",
+                "Решение практических задач"
+            ],
+            "description": "Демонстрационное описание вакансии",
+            "url": null,
+            "source": "mock",
+            "is_mock": true
+        },
+        {
+            "id": "mock-002",
+            "name": "Python Developer",
+            "company": "Example Organization",
+            "salary": null,
+            "experience": "От 1 года до 3 лет",
+            "skills": [
+                "Профессиональные инструменты",
+                "Аналитическое мышление",
+                "Документирование результатов"
+            ],
+            "description": "Тестовая вакансия для проверки работы Эксперта",
+            "url": null,
+            "source": "mock",
+            "is_mock": true
+        }
+    ],
+    "forum_discussions": [
+        {
+            "id": "mock-forum-001",
+            "title": "Подготовка к собеседованию: Python Developer",
+            "text": "Какие профессиональные знания проверяют на собеседовании?",
+            "url": null,
+            "source": "mock",
+            "is_mock": true
+        },
+        {
+            "id": "mock-forum-002",
+            "title": "Опыт работы по профессии Python Developer",
+            "text": "Какие практические задачи чаще всего встречаются в работе?",
+            "url": null,
+            "source": "mock",
+            "is_mock": true
+        }
+    ],
+    "errors": []
+}
