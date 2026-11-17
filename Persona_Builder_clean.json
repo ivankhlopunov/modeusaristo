@@ -1,0 +1,113 @@
+{
+  "name": "Persona Builder",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "persona",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d070fdf7-3946-4fa7-a9c3-8a56ff053176",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json.body.facts || [], null, 2) }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Ты — Persona Builder. Создай структурированную карточку синтетического специалиста на основе фактов, полученных от Scout.  Правила: 1. Используй только информацию из переданных facts. 2. Не выдумывай опыт, навыки, инструменты и обязанности. 3. Определи профессиональную роль и специализацию, если факты позволяют. 4. Сформируй список основных профессиональных задач. 5. Сохраняй evidence_ids, связанные с каждой задачей. 6. Если информации недостаточно, укажи это явно. 7. Не представляй синтетическую персону как реального человека. 8. Отвечай только валидным JSON без Markdown и пояснений.  Формат ответа: {   \"persona_id\": \"generated\",   \"role\": \"\",   \"specialization\": \"\",   \"main_tasks\": [],   \"tools\": [],   \"evidence_ids\": [],   \"limitations\": [],   \"mode\": \"synthetic\" }"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        224,
+        0
+      ],
+      "id": "4c282337-c641-44ca-9fd2-44fd09aa3525",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        160,
+        208
+      ],
+      "id": "2b0757fd-ef9b-465e-a87e-8cd6e1639fed",
+      "name": "Ollama Chat Model"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.parse($json.text) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        0
+      ],
+      "id": "7e812484-2489-4014-b4eb-fafa4513efa9",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
