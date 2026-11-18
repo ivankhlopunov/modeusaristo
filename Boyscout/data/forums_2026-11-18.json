@@ -1,0 +1,1578 @@
+{
+    "source": "stackoverflow_ru",
+    "collected_at": "2026-11-18T20:38:41.293125+00:00",
+    "total": 60,
+    "forum_discussions": [
+        {
+            "id": "1403383",
+            "profession": "Python Developer",
+            "title": "Автоматическое заполнение пользователя в формах django",
+            "text": "Есть модель Post, на основании которой создается форма PostForm и вьюха post_create.\nНеобходимо, чтобы имя автора поста автоматически подставлялось (создание поста доступно только авторизованному пользователю) Модель class Post(models.Model):\n    text = models.TextField()\n    pub_date = models.DateTimeField(auto_now_add=True)\n    author = models.ForeignKey(\n        User,\n        on_delete=models.CASCADE,\n        related_name='posts'\n    )\n    group = models.ForeignKey(\n        'Group',\n        blank=True,\n        null=True,\n        on_delete=models.SET_NULL\n    )\n\n    class Meta:\n        ordering = ['-pub_date']\n\n    def __str__(self):\n        return self.text форма class PostForm(forms.ModelForm):\n    class Meta:\n        model = Post\n        fields = ('text', 'group')\n        widgets = {'author': forms.HiddenInput()} вьюха def post_create(request):\n    if request.method == 'POST':\n        form = PostForm(request.POST)\n        if form.is_valid():\n            \n            form.author = request.user\n            form = form.save()\n            return redirect(f'/profile/{author}/')\n        else:\n            return render(request, 'posts/create.html', {'form': form})\n    else:\n        form = PostForm()\n        return render(request, 'posts/create.html', {'form': form})",
+            "questions": [
+                "Автоматическое заполнение пользователя в формах django"
+            ],
+            "answers": [
+                {
+                    "text": "Возможно initial поможет в вашем вопросе. form = PostForm(request.POST, initial = {'author':request.user})",
+                    "score": 0,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1403383/%d0%90%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b5-%d0%b7%d0%b0%d0%bf%d0%be%d0%bb%d0%bd%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d1%82%d0%b5%d0%bb%d1%8f-%d0%b2-%d1%84%d0%be%d1%80%d0%bc%d0%b0%d1%85-django",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-04-24T10:37:37+00:00",
+            "collected_at": "2026-11-18T20:38:29.649141+00:00"
+        },
+        {
+            "id": "1433836",
+            "profession": "Python Developer",
+            "title": "Не срабатывает пагинатор в классе ListView",
+            "text": "Не срабатывает пагинатор в классе ListView, делал все по документации, посмотрел пару статей и все выглядит так же как у меня, но почему-то на сайте выводится полный список статей на одной странице. Код views class MoviesHome(ListView):\nmodel = Movies\ntemplate_name = 'movies/movies_home.html'\ncontext_object_name = 'movies'\npaginate_by = 10\n\ndef get_queryset(self):\n    return Movies.objects.filter(type_item='movie').order_by('-date') Код html <div class='features'>    \n    <h1> Movies</h1>       \n    <div class='movie_grid'>  \n        {% for movie in movies %}\n            <div class='grid-item'>      \n                <a href='{{movie.get_absolute_url}}'><h1 class=\"movie_title\">{{movie.title}}</h1> \n                <img src=\"{{movie.poster.url}}\" class=\"poster\" alt=\"Poster {{movie.title}} {{movie.year}}\"></a>          \n            </div>      \n        {% endfor %}    \n   </div>\n    <div class=\"pagination\">\n        <p>\n            <span class=\"step-links\">\n                {% if page_obj.has_previous %}\n                    <a href=\"?page={{ page_obj.previous_page_number }}\">previous</a>\n                {% endif %}\n\n                {% if page_obj.has_next %}\n                    <a href=\"?page={{ page_obj.next_page_number }}\">next</a>\n                {% endif %}\n            </span>\n        </p>\n    </div>\n</div>",
+            "questions": [
+                "Не срабатывает пагинатор в классе ListView"
+            ],
+            "answers": [
+                {
+                    "text": "{% if page_obj.has_other_pages %}\n<nav aria-label=\"...\">\n    <ul class=\"pagination\">\n\n        {% if page_obj.has_previous %}\n        <li class=\"page-item\">\n            <a class=\"page-link\" href=\"?page={{ page_obj.previous_page_number }}\" tabindex=\"-1\">Previous</a>\n        </li>\n        {% endif %}\n\n        {% for p in page_obj.paginator.page_range %}\n\n        {% if page_obj.number == p %}\n        <li class=\"page-item active\" aria-current=\"page\">\n           <a class=\"page-link\" href=\"?page={{ p }}\">{{ p }} <span class=\"sr-only\"></span></a>\n        </li>\n        {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}\n        <li class=\"page-item\">\n            <a class=\"page-link\" href=\"?page={{ p }}\">{{ p }}</a>\n        </li>\n        {% endif %}\n\n        {% endfor %}\n\n        {% if page_obj.has_next %}\n        <li class=\"page-item\">\n            <a class=\"page-link\" href=\"?page={{ page_obj.next_page_number }}\">Next</a>\n        </li>\n        {% endif %}\n\n    </ul>\n</nav>\n{% endif %} у меня так работает",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": -1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1433836/%d0%9d%d0%b5-%d1%81%d1%80%d0%b0%d0%b1%d0%b0%d1%82%d1%8b%d0%b2%d0%b0%d0%b5%d1%82-%d0%bf%d0%b0%d0%b3%d0%b8%d0%bd%d0%b0%d1%82%d0%be%d1%80-%d0%b2-%d0%ba%d0%bb%d0%b0%d1%81%d1%81%d0%b5-listview",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-07-28T06:57:23+00:00",
+            "collected_at": "2026-11-18T20:38:29.649531+00:00"
+        },
+        {
+            "id": "1439067",
+            "profession": "Python Developer",
+            "title": "Django registration",
+            "text": "Мне нужно регистрировать пользователей на сайте через админ панель Django. Нужно всего 4 поля. Это: username, name, pass, id. Никак не могу найти инфу как это реализовать. Опыта у меня очень мало, прошу помочь если кто нибудь знает как это можно реализовать. Спасибо!",
+            "questions": [
+                "Django registration"
+            ],
+            "answers": [
+                {
+                    "text": "Создай модель User (могу сослаться на документацию, но приведу пример кода: class User(models.Model):\n    username = models.CharField(max_length=50)\n    name = models.CharField(max_length=50)\n    passwd = models.CharField(max_length=50)\n   #                            ^\n   #                            |\n   #                            |\n   #                     ТАК ДЕЛАТЬ НЕ СТОИТ!!!\n   #                  ПАРОЛИ НАДО ШИФРОВАТЬ!!!!!! И зарегистрируй её в admin.py admin.site.register(User) Кстати, у админки очень много всяких возможностей, да и у Джанги в целом. Почитай книгу \"Django 2.1 на практике\" https://www.pdfdrive.com/django-21-%D0%9F%D1%80%D0%B0%D0%BA%D1%82%D0%B8%D0%BA%D0%B0-%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B2%D0%B5%D0%B1-%D1%81%D0%B0%D0%B9%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-python-e184062061.html . Я её не до конца дочитал, и уже знаю, как создать быстрый пиратский сайт со всяческими примочками вроде форума (на примере будет создаваться сайт объявлений). Удачи в прочтении!",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1439067/django-registration",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-08-13T17:39:17+00:00",
+            "collected_at": "2026-11-18T20:38:29.649633+00:00"
+        },
+        {
+            "id": "1439113",
+            "profession": "Python Developer",
+            "title": "Как сохранить модель в forms.Form django?",
+            "text": "Я сохраняю форму через forms.Form , поскольку мне нужен свой queryset . Куда указывать поле related_uuid из модели? в save или после создания класса? если после создания класса, тогда мне надо делать как поле hidden ? (это поле не должно отображаться на сайте) текст ошибки: 'NoneType' object has no attribute 'related_uuid' вопрос тупой, я знаю, но почему-то не могу решить Views def saveForm(self, **kwargs):   \n        form_add = RelatedAddForm(self.request.POST, prefix='form')\n        form_add.related_uuid = kwargs['uuid']\n        form_add.save() Forms class RelatedAddForm(forms.Form):\n    name = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'autocomplete': 'on'}), queryset=None)\n    # сюда указывать related_uuid?\n    # related_uuid = forms.CharField(widget=forms.HiddenInput(), initial='value', required=False)\n​\n    def __init__(self, *args, **kwargs):\n        super(RelatedAddForm, self).__init__(*args, **kwargs)\n        self.fields['name'].queryset = getStoresListByUser()\n​\n​\n    def save(self, **kwargs):\n        StoreRelated.objects.update_or_create(store=name, related_uuid=related_uuid)\n​ Models class StoreRelated(models.Model):\n    store = models.ForeignKey('Storehouses', null=True, on_delete=models.PROTECT)\n    related_uuid = models.JSONField(blank=True, null=True)\n​\nclass Storehouses(models.Model):\n    name = models.CharField(max_length=150, blank=True)",
+            "questions": [
+                "Как сохранить модель в forms.Form django?"
+            ],
+            "answers": [
+                {
+                    "text": "Не надо создавать метод save, а просто передать данные в модель def saveForm(self, **kwargs):\n    related_dict = kwargs['related_dict']\n    form_from_dict = related_dict['form']\n    f = StoreRelated(\n        store=form_from_dict.cleaned_data['name'],\n        related_uuid=related_dict['uuid'])\n    f.save()",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1439113/%d0%9a%d0%b0%d0%ba-%d1%81%d0%be%d1%85%d1%80%d0%b0%d0%bd%d0%b8%d1%82%d1%8c-%d0%bc%d0%be%d0%b4%d0%b5%d0%bb%d1%8c-%d0%b2-forms-form-django",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-08-13T20:56:28+00:00",
+            "collected_at": "2026-11-18T20:38:29.650201+00:00"
+        },
+        {
+            "id": "1149688",
+            "profession": "Python Developer",
+            "title": "Как сделать подкатегории для каждой категории в Django?",
+            "text": "Всем привет. Есть категории в отдельном классе models.py, также написал отдельный класс для подкатегории. Все это закинул в admin.py, создал категории, и для каждой категории создал подкатегорий. Во views.py ничего больше не добавлял. Так вот, нужно ли написать для подкатегорий во views.py? И если нет, то как вывести в шаблоне с моделей? Еще можно ли сделать все это не создавая класс подкатегории в models.py? models.py: class Category(models.Model):\n    img = models.FileField(verbose_name='Фото категории')\n    name = models.CharField(max_length=25, verbose_name='Название')\n\n    def __str__(self):\n        return self.name\n\n    class Meta:\n        verbose_name_plural = 'Категории'\n        verbose_name = 'Категория'\n        ordering = ['name']\n\nclass SubCategory(models.Model):\n    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')\n    name = models.CharField(max_length=25, unique=True, verbose_name='Название')\n\n    def __str__(self):\n        return self.name\n\n    class Meta:\n        verbose_name_plural = 'ПодКатегории'\n        verbose_name = 'ПодКатегория'\n        ordering = ['name'] views.py: def index(request):\n    softs = Soft.objects.all()\n    categories = Category.objects.all()\n    context = {'softs': softs, 'categories': categories}\n    return render(request, 'main/index.html', context) В этом я пока что новичок, так что строго не судите. И всем кто отозвался, заранее спасибо.",
+            "questions": [
+                "Как сделать подкатегории для каждой категории в Django?"
+            ],
+            "answers": [
+                {
+                    "text": "Можно ли сделать все это не создавая класс подкатегории в models.py? Нужно! Потому что подкатегорий может быть больше одной. Удобно использовать связь ForeignKey на ту же самую модель, указав self первым аргументом. models.py: class Category(models.Model):\n    parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True) views.py: categories = Category.objects.filter(parent_category=None) template.html: {% for category in categories %}\n    {% for subcategory in category.category_set.all %}\n        {{ subcategory }}\n    {% endfor %}\n{% endfor %}",
+                    "score": 2,
+                    "is_accepted": true
+                },
+                {
+                    "text": "Как вывести [подкатегории] в шаблоне с моделей? Через ForeignKey.related_name . template.html: {% for category in categories %}\n    {% for subcategory in category.subcategory_set.all %}\n        {{ subcategory }}\n    {% endfor %}\n{% endfor %}",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 1,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/1149688/%d0%9a%d0%b0%d0%ba-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d0%bf%d0%be%d0%b4%d0%ba%d0%b0%d1%82%d0%b5%d0%b3%d0%be%d1%80%d0%b8%d0%b8-%d0%b4%d0%bb%d1%8f-%d0%ba%d0%b0%d0%b6%d0%b4%d0%be%d0%b9-%d0%ba%d0%b0%d1%82%d0%b5%d0%b3%d0%be%d1%80%d0%b8%d0%b8-%d0%b2-django",
+            "source": "stackoverflow_ru",
+            "published_at": "2020-07-06T17:20:09+00:00",
+            "collected_at": "2026-11-18T20:38:29.650548+00:00"
+        },
+        {
+            "id": "1441179",
+            "profession": "Python Developer",
+            "title": "mod_wsgi русские символы в пути проблема",
+            "text": "на винде локально работает без проблем. на сервере. python 3.6  django 3.2  + apache2 mod_wsgi когда пытаюсь создать папку с русскими буквами UnicodeEncodeError at /uploads/тест/file.log\n'ascii' codec can't encode characters in position 63-66: ordinal not in range(128)\nRequest Method: GET\nRequest URL:    http://*/uploads/%D1%82%D0%B5%D1%81%D1%82/file.log\nDjango Version: 3.2.15\nException Type: UnicodeEncodeError\nException Value:    \n'ascii' codec can't encode characters in position 63-66: ordinal not in range(128)\nException Location: /usr/lib/python3.6/pathlib.py, line 387, in wrapped\nPython Executable:  /usr/bin/python3\nPython Version: 3.6.9\nPython Path:    \n['/usr/lib/python36.zip',\n '/usr/lib/python3.6',\n '/usr/lib/python3.6/lib-dynload',\n '/home/admin/.local/lib/python3.6/site-packages',\n '/usr/local/lib/python3.6/dist-packages',\n '/usr/lib/python3/dist-packages',\n '*/public_html/crm',\n '*/public_html/venv/lib/python3.6/site-packages']\nServer time:    Sat, 20 Aug 2022 22:37:59 +0300\n\n\n*/public_html/venv/lib/python3.6/site-packages/django/core/handlers/exception.py, line 47, in inner\n                response = get_response(request) …\n*/public_html/venv/lib/python3.6/site-packages/django/core/handlers/base.py, line 181, in _get_response\n                response = wrapped_callback(request, *callback_args, **callback_kwargs) …\n*/public_html/venv/lib/python3.6/site-packages/django/views/static.py, line 37, in serve\n    if fullpath.is_dir(): …\n/usr/lib/python3.6/pathlib.py, line 1348, in is_dir\n            return S_ISDIR(self.stat().st_mode) …\n/usr/lib/python3.6/pathlib.py, line 1158, in stat\n        return self._accessor.stat(self) …\n/usr/lib/python3.6/pathlib.py, line 387, in wrapped\n            return strfunc(str(pathobj), *args) подскажите как вылечить НО. если запускаю скрипт cli python manager.py вызов_тестового_скрипта он исправно создает файл с русским именем. я так понимаю проблема в кодировке mod_wsgi\nКак ее исправить где указывать эту кодировку?",
+            "questions": [
+                "mod_wsgi русские символы в пути проблема"
+            ],
+            "answers": [
+                {
+                    "text": "вообщем перерыл весь инет. куча советов. Но я упорно не мог найти у себя на сервере где у меня конфиг apache wsgi. ТОчнее я нашел, но он пустой. там ничего нет. Оказалось locale проблема в нем.\nсделал 2 настройки в конфиге самого апача  apache2.conf LANG=en_US.UTF-8\nlocale=en_US.UTF-8 и все заработало помогла эта статья https://github.com/GrahamDumpleton/mod_wsgi/issues/625",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1441179/mod-wsgi-%d1%80%d1%83%d1%81%d1%81%d0%ba%d0%b8%d0%b5-%d1%81%d0%b8%d0%bc%d0%b2%d0%be%d0%bb%d1%8b-%d0%b2-%d0%bf%d1%83%d1%82%d0%b8-%d0%bf%d1%80%d0%be%d0%b1%d0%bb%d0%b5%d0%bc%d0%b0",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-08-20T19:41:23+00:00",
+            "collected_at": "2026-11-18T20:38:29.650860+00:00"
+        },
+        {
+            "id": "1443613",
+            "profession": "Python Developer",
+            "title": "Форма не заполняет поля в БД",
+            "text": "Даже не знаю с чего начать. Есть модель, которая хранит инфу про игру, пытался я сделать так чтобы автор автоматом задавался как зарегистрированный пользователь. Ну получилось, но поломался логин. Пришлось создавать новый проект и переносить весь код в новый. Код перенес весь. Проверял через гит. Но теперь нельзя добавить новую игру. forms.py from django.contrib.auth.forms import UserCreationForm\nfrom django.core import validators\nfrom django.forms import *\n\nfrom .models import *\n\n\nclass AddGameForm(ModelForm):\n    banner = ImageField(label='Баннер',\n                        validators=[\n                            validators.FileExtensionValidator(\n                                allowed_extensions=('gif', 'jpg', 'png')\n                            )\n                        ],\n                        error_messages=({'invalid_extension': 'Этот формат файлов не поддерживается'})\n                        )\n    torrent = FileField(label=\"Торрент с игрой\",\n                        validators=[\n                            validators.FileExtensionValidator(\n                                allowed_extensions=('torrent',)\n                            )\n                        ],\n                        error_messages=({'invalid_extension': \"Извини, поддерживаем только торренты\"})\n                        )\n\n    class Meta:\n        model = Game\n        fields = ('name', 'description', 'genre', 'banner', 'torrent')\n\n\nclass AddUserForm(UserCreationForm):\n\n    def __init__(self, *args, **kwargs):\n        super(AddUserForm, self).__init__(*args, **kwargs)\n\n    email = EmailField(\n        widget=EmailInput(\n            attrs={\n                'placeholder': 'fsociety@fuxsocy.com'\n            }\n        )\n    )\n\n    username = CharField(\n        widget=TextInput(),\n        label=\"Ник\"\n    )\n\n    password1 = CharField(\n        label=\"Пароль\",\n        strip=False,\n        widget=PasswordInput(attrs={\"autocomplete\": \"new-password\"}),\n    )\n\n    password2 = CharField(\n        label=\"Ещё раз",
+            "questions": [
+                "Форма не заполняет поля в БД"
+            ],
+            "answers": [
+                {
+                    "text": "Так у тебя данных нет в форме. Форма отправляется на сервер в виде POST запроса. if request.method == \"POST\":\n    form = AddGameForm(request.POST) <-- Ты должен заполнить свою форму данными из POST\n    if form.is_valid():\n        .... И если данные будут валидными, все сохранится.",
+                    "score": 0,
+                    "is_accepted": false
+                },
+                {
+                    "text": "Человеческая невнимательность. Форма не передавала данные из-за того, что я забыл добавить в вызов конструктора объекта формы request.FILES",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/1443613/%d0%a4%d0%be%d1%80%d0%bc%d0%b0-%d0%bd%d0%b5-%d0%b7%d0%b0%d0%bf%d0%be%d0%bb%d0%bd%d1%8f%d0%b5%d1%82-%d0%bf%d0%be%d0%bb%d1%8f-%d0%b2-%d0%91%d0%94",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-08-28T19:11:00+00:00",
+            "collected_at": "2026-11-18T20:38:29.651357+00:00"
+        },
+        {
+            "id": "1445447",
+            "profession": "Python Developer",
+            "title": "Как в django создать страницу с шаблонами и передать её через ajax?",
+            "text": "В общем, как отправить просто html и вставить его на страницу я знаю, мне нужно чтоб с помощью шаблона(который еще язык шаблонизатора) генерировалась карточка товара в html и передавать это на страницу, или так сделать нельзя и придется просто отправлять данные и там уже их вставлять через js?",
+            "questions": [
+                "Как в django создать страницу с шаблонами и передать её через ajax?"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1445447/%d0%9a%d0%b0%d0%ba-%d0%b2-django-%d1%81%d0%be%d0%b7%d0%b4%d0%b0%d1%82%d1%8c-%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b8%d1%86%d1%83-%d1%81-%d1%88%d0%b0%d0%b1%d0%bb%d0%be%d0%bd%d0%b0%d0%bc%d0%b8-%d0%b8-%d0%bf%d0%b5%d1%80%d0%b5%d0%b4%d0%b0%d1%82%d1%8c-%d0%b5%d1%91-%d1%87%d0%b5%d1%80%d0%b5%d0%b7-ajax",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-09-03T19:59:52+00:00",
+            "collected_at": "2026-11-18T20:38:29.651443+00:00"
+        },
+        {
+            "id": "1445611",
+            "profession": "Python Developer",
+            "title": "django переход на разные страницы",
+            "text": "пишу свой сайт на django, пока что там есть 3 страницы: главная, регистрация и авторизация. заметила, что при переходе со страницы регистрации на страницу авторизации, url-адрес не обновляется, а складывается с предыдущим. т.е., url-адрес регистрации: registration/ и когда я перехожу на страницу авторизации, я хочу заменить этот адрес другим: login/ но вместо этого они складываются и я, естественно, получаю ошибку о несуществующем адресе. то же самое происходит и когда я перехожу наоборот со страницы авторизации на страницу регистрации. как решить проблему? urls.py самого приложения: urlpatterns = [\n    path(\"\", HomePage.as_view(), name=\"home\"),\n    path(\"<int:advertisement_id>/\", advertisement, name=\"advertisement\"),\n    path(\"new/<int:advertisement_id>\", make_advertisement_id, name=\"new_advertisement\"),\n    path('registration/', RegistrationUserView.as_view(), name='registration'),\n    path('login/', LoginView.as_view(), name='login')\n]\n\nurlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) urls.py проекта: urlpatterns = [\n    path(\"admin/\", admin.site.urls),\n    path(\"\", include(\"apartment_app.urls\")),\n]",
+            "questions": [
+                "django переход на разные страницы"
+            ],
+            "answers": [
+                {
+                    "text": "разобралась, в html шаблоне поставила <a href=\"{% url 'login' %}\"..> для кнопки войти и <a href=\"{% url 'registration' %}\"..> для кнопки регистрации, теперь все работает",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1445611/django-%d0%bf%d0%b5%d1%80%d0%b5%d1%85%d0%be%d0%b4-%d0%bd%d0%b0-%d1%80%d0%b0%d0%b7%d0%bd%d1%8b%d0%b5-%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b8%d1%86%d1%8b",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-09-04T12:19:13+00:00",
+            "collected_at": "2026-11-18T20:38:29.651706+00:00"
+        },
+        {
+            "id": "1443824",
+            "profession": "Python Developer",
+            "title": "Ошибка модуль не имеет атрибута entry_set. (DJANGO)",
+            "text": "Я создаю сайт в котором пользователи могут писать и просматривать свои записи. На главной страницы находятся темы при переходе на них должен открыться динамический url с записями к этой теме. Но при переходе на любую запись мне выдаётся ошибка - type object 'Description' has no attribute 'entry_set'. views.py from django.shortcuts import render\nfrom .models import Topic, Description\n\n\ndef index(request):\n    topic = Topic.objects.all\n    context = {'topic': topic}\n    return render(request, 'Menu/Menu.html', context)\n\n\ndef description(request, topic_id):\n    topic = Topic.objects.get(id=topic_id)\n    description = Description.entry_set.all\n    context = {'description': description, 'topic': topic}\n    return render(request, 'Menu/Description.html', context) models.py from django.db import models\n\n\nclass Topic(models.Model):\n    text = models.CharField(max_length=100)\n\n    def __str__(self):\n        return self.text\n\n\nclass Description(models.Model):\n    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)\n    text = models.TextField()\n    date_added = models.DateTimeField(auto_now_add=True)\n\n    class Meta:\n        verbose_name_plural = 'Descriptions'\n\n    def __str__(self):\n        if len(self.text) > 10:\n            return f'{self.text[:10]}...'\n        else:\n            return self.text",
+            "questions": [
+                "Ошибка модуль не имеет атрибута entry_set. (DJANGO)"
+            ],
+            "answers": [
+                {
+                    "text": "Проблема решена. Я просто заменил строку description = Description.entry_set.all в views.py под имя моего модуля description = topic.description_set.all . Так как я делал по книге я не понял что entry_set это не одна функция.",
+                    "score": 0,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python",
+                "django"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1443824/%d0%9e%d1%88%d0%b8%d0%b1%d0%ba%d0%b0-%d0%bc%d0%be%d0%b4%d1%83%d0%bb%d1%8c-%d0%bd%d0%b5-%d0%b8%d0%bc%d0%b5%d0%b5%d1%82-%d0%b0%d1%82%d1%80%d0%b8%d0%b1%d1%83%d1%82%d0%b0-entry-set-django",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-08-29T12:43:46+00:00",
+            "collected_at": "2026-11-18T20:38:29.651992+00:00"
+        },
+        {
+            "id": "1601510",
+            "profession": "Python Developer",
+            "title": "Python Fastapi js аутентификация",
+            "text": "Пишу код на Fastapi.\nмаршрут авторизации @router.post(\"/login\", response_model=TokenModel, summary=\"Authentication of a user in the app.\",\n            description=\"Uses user data to log in. Creates JWT token.\")\nasync def login(response: Response, body: OAuth2PasswordRequestForm = Depends(), \n                db: Session = Depends(get_db)):\n    user = await repository_users.get_user_by_email(body.username, db)\n    if user is None:\n        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=\"Invalid email\")\n    if not user.confirmed:\n        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=\"Email not confirmed\")\n    if not auth_services.verify_password(body.password, user.password):\n        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=\"Invalid password\")\n    # Generate JWT\n    access_token = await auth_services.create_access_token(data={\"sub\": user.email})\n    refresh_token = await auth_services.create_refresh_token(data={\"sub\": user.email})\n    await repository_users.update_token(user, refresh_token, db)\n    return {\"access_token\": access_token, \"refresh_token\": refresh_token, \"token_type\": \"bearer\"}\n\n \n    @router.get('/login')\nasync def login(request: Request):\n\n    return templates.TemplateResponse(name='login.html', context={'request': request}) скрипт js document.getElementById(\"form\").addEventListener(\"submit\", function (event) {\n    event.preventDefault();\n    fetch(\"/api/auth/login\", {\n        method: \"POST\",\n        body: new FormData(event.target),\n        headers: {\n            \"Authorization\": \"Bearer YOUR_TOKEN\"\n        }\n    })\n        .then(response => {\n            if (response.ok) {\n                return response.json();\n            } else {\n                throw new Error('Failed to authenticate');\n            }\n        })\n        .then(data => {\n            window.location.href = '/api/page';\n        })\n        .catch(error => console.error(\"Error:\", error));\n});''' Маршрут всех контактов",
+            "questions": [
+                "Python Fastapi js аутентификация"
+            ],
+            "answers": [
+                {
+                    "text": "Бэкенд возвращает вам пару токенов, их необходимо запомнить на стороне клиента (для начала попробуйте хранить access token в куки или local storage) В тех местах, где предполагается доступ под авторизованным пользователем, вы должны передать бэкенду (например, из куки) access token в заголовке Authorization (как правило заголовок носит именно такое, а значение заголовка это строка вида Bearer <your access token> Есть множество источников о том как работать с токенами, попробуйте поискать материалы на тему json web tokens. После первичного погружения в тему рекомендую поинтересоваться временем жизни токенов и способами их безопасного хранения на клиенте (особенно касается refresh token)",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "javascript",
+                "python",
+                "html",
+                "авторизация",
+                "fastapi"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1601510/python-fastapi-js-%d0%b0%d1%83%d1%82%d0%b5%d0%bd%d1%82%d0%b8%d1%84%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d1%8f",
+            "source": "stackoverflow_ru",
+            "published_at": "2024-12-02T22:45:32+00:00",
+            "collected_at": "2026-11-18T20:38:29.652487+00:00"
+        },
+        {
+            "id": "1585168",
+            "profession": "Python Developer",
+            "title": "Python Fastapi Глобальная переменная в контексте потока выполнения запроса",
+            "text": "Предположим, бэкенд работает в связке Python+Fastapi и принимает через сокет GET запрос Вместе с запросом пользователь отправляет идентификатор сессии. Этот идентификатор сессии мне нужен из \"глубоких\" функций моего приложения. Скажем, имем такую цепочку вызовов (от контроллера до бизнес-функций приложения)\nA -> B -> C -> D A имеет доступ к этой сессии, так как у него есть ссылка на HttpRequest.\nЯ могу передать эту ссылку из A в B. Потом из B в C. Потом из C в D.\nНо, если только D нужен доступ к этой переменной, чтобы, скажем, сохранить имя отправителя запроса, или авторизовать его, то иметь этот доступ в B C бессмысленно. Я бы хотел записать эту переменную куда нибудь в оперативную память в A глобально, и обратиться к ней из D, но это сработает, если пользователь всего один. В случае, если придет два запроса в одно время, то эта переменная \"перетрется\" и возникнет проблема гонки. Если бы я использовал свой веб-сервер, возможно, я бы мог записать ее в контекст потока, можно ли сделать что-то похожее с fastapi?",
+            "questions": [
+                "Python Fastapi Глобальная переменная в контексте потока выполнения запроса"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "fastapi"
+            ],
+            "score": 1,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1585168/python-fastapi-%d0%93%d0%bb%d0%be%d0%b1%d0%b0%d0%bb%d1%8c%d0%bd%d0%b0%d1%8f-%d0%bf%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d0%b0%d1%8f-%d0%b2-%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%ba%d1%81%d1%82%d0%b5-%d0%bf%d0%be%d1%82%d0%be%d0%ba%d0%b0-%d0%b2%d1%8b%d0%bf%d0%be%d0%bb%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f-%d0%b7%d0%b0%d0%bf%d1%80%d0%be%d1%81%d0%b0",
+            "source": "stackoverflow_ru",
+            "published_at": "2024-06-25T12:04:32+00:00",
+            "collected_at": "2026-11-18T20:38:29.652745+00:00"
+        },
+        {
+            "id": "1370714",
+            "profession": "Python Developer",
+            "title": "Python fastapi post xml",
+            "text": "Я хочу отправить запрос курлом с телом xml и получить этот же xml как ответ.\nМой запрос: curl -X post http://host:port/api/v1/ -H \"Content-Type: application/xml\" -H \"Accept: application/xml\" -d \"<word>\\\"hi\\\"</word>\" Мой код: from simplexml import dumps, loads\nfrom pydantic import BaseModel\nfrom typing import TypeVar, Generic, Type, Any\nfrom starlette.requests import Request\nfrom starlette.responses import Response\nfrom fastapi import FastAPI, Depends\n\nT = TypeVar(\"T\", bound=BaseModel)\n\nclass XmlData(BaseModel):\n    word: str\n\nclass XmlBody(Generic[T]):\n    def __init__(self, model_class: Type[T]):\n        self.model_class = model_class\n\n    async def __call__(self, request: Request) -> T:\n        body = await request.body()\n        dict_data = loads(body)\n        return self.model_class.parse_obj(dict_data)\n\nclass XmlResponse(Response):\n    media_type = \"application/xml\"\n\n    def render(self, content: Any) -> bytes:\n        return dumps({'response': content}).encode(\"utf-8\")\n\n\napp = FastAPI()\n\n@app.post(\"api/v1/\")\ndef post_data(data: XmlData = Depends(XmlBody(XmlData))):\n    return XmlResponse(data) Получаю ошибку: pydantic.error_wrappers.ValidationError: 1 validation error for XmlData\nname\n  str type expected (type=type_error.str) Подскажите, где может быть ошибка и куда смотреть?",
+            "questions": [
+                "Python fastapi post xml"
+            ],
+            "answers": [
+                {
+                    "text": "ValidationError возникает из-за того, что simplexml.loads(\"<word>\\\"hi\\\"</word>\") возвращает {'word': {'word': '\"hi\"'}} , и это не соответствует модели XmlData (в словаре данные по ключу \"word\" - не строка, а вложенный словарь), поэтому и падает на вызове self.model_class.parse_obj(dict_data) с ошибкой валидации. Корректным словарем для этой модели был бы словарь вида {'word': '\"hi\"'} . Со входными данными <Request><word>\\\"hi\\\"</word></Request> (из комментариев к вопросу) получится словарь {'Request': {'word': '\"hi\"'}} . При попытке конвертировать в XmlData упадет с ошибкой валидации, на этот раз из-за того, что во внешнем словаре отсутствует ключ \"word\" : >>> from pydantic import BaseModel                                              \n\n>>> class XmlData(BaseModel): \n...     word: str                                                               \n\n>>> XmlData.parse_obj({'Request': {'word': '\"hi\"'}})                            \nTraceback (most recent call last):\n  File \"<stdin>\", line 1, in <module>\n  File \"pydantic/main.py\", line 578, in pydantic.main.BaseModel.parse_obj\n  File \"pydantic/main.py\", line 406, in pydantic.main.BaseModel.__init__\npydantic.error_wrappers.ValidationError: 1 validation error for XmlData\nword\n  field required (type=value_error.missing)\n\n1 validation error for XmlData\nword\n  field required (type=value_error.missing) Тут по сути нужно сначала вытащить данные по ключу 'Request' , и уже их конвертировать в XmlData: >>> dict_data = {'Request': {'word': '\"h",
+                    "score": 2,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python",
+                "xml",
+                "simplexml",
+                "fastapi",
+                "pydantic"
+            ],
+            "score": 3,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1370714/python-fastapi-post-xml",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-01-12T08:24:32+00:00",
+            "collected_at": "2026-11-18T20:38:29.653465+00:00"
+        },
+        {
+            "id": "1263427",
+            "profession": "Python Developer",
+            "title": "Асинхронность в FastAPI / Python",
+            "text": "Как сделать, чтобы при получении, например, двух запросов в FastAPI, они выполнялись независимо друг от друга. То есть, если первым придет запрос на обработку, который занимает 20 сек, а вторым придет запрос, который занимает 5 сек, то результат второго запроса возвращался раньше первого? В данный момент имеется такой пример (в async функциях yield/thread/multiproccessing не присутствуют): if __name__ == \"__main__\":\n    uvicorn.run(\"main:app\", host= host, port= port, log_level=\"info\", loop=\"asyncio\")\n\n\n@app.post(\"/bar_logo\")\nasync def add_bar_logo(pos: str = Form(\"\"), fio: str = Form(\"\"), phone: str = Form(\"\"), date: str = \nForm(\"\"), file: UploadFile = File(...)):\n    file_data = file.file.read()\n    res_pdf = await bar_logo(file_data, pos, fio, phone, date)\n    return FileResponse(res_pdf, media_type=\"application/pdf\", filename=file.filename)\n\n\nasync def bar_logo(file_data, pos, fio, phone, date):\n    uuid = uuid4()\n    doc = fitz.open(stream=file_data, filetype=\"pdf\")\n    if doc[0].rect.width > doc[0].rect.height:\n        l_path = await draw_bar_w(pos, fio, phone, date)\n        with open(l_path, \"rb\") as f:\n            logo = fitz.Pixmap(f.read())\n    else:\n        l_path = await draw_bar_h(pos, fio, phone, date)\n        with open(l_path, \"rb\") as f:\n            logo = fitz.Pixmap(f.read())\n    doc[-1].insert_image(doc[-1].rect, pixmap=logo)\n    save_dir = f\"../results/{uuid}.pdf\"\n    doc.save(save_dir, garbage=2, deflate=True, encryption=encrypt_meth, permissions=perm, owner_pw=\"\")\n    return save_dir",
+            "questions": [
+                "Асинхронность в FastAPI / Python"
+            ],
+            "answers": [
+                {
+                    "text": "Есть асинхронные фреймворки, есть синхронные. В целом идея такая: асинхронные по умолчанию выполняют все запросы в 1 потоке, синхронные выполняют каждый запрос в отдельном потоке.\nЕсли писать на async, то никаких доп задержек быть не должно, как cpu bound так и io bound без async. async def - не значит, что функция выполняется асинхронно. Посмотрев на ваш пример, можно увидеть что async def bar_logo - синхронно читает из файловой системы => io задержка, которая блочит весь event loop. Блокировка event loop = все клиенты ждут. Вот и получается, что 1 запрос прилетел и так как там блочится event loop, все остальные запросы не могут быть обработаны. Это очень грубо, но в общем работает это примерно так. Чтобы этого избежать нужно использовать специальные асинхронные либы, aiofiles например для чтения файлов. А вот если либы специальной нет, то все io вещи нужно заворачивать в потоки.  Можно присмотреться к anyio библиотеки, которая облегчит тут жизнь. from anyio import to_thread\n\n\nasync def io_bound(io_fun, params_fun):\n    await to_thread.run_sync(io_fun, params_fun) Потоки - хорошо подходят для io bound задач и плохо подходят для cpu bound задач, где требуются вычислительные ресурсы. Это связано с существованием GIL. Поэтому для cpu bound задач можно использовать процессы. Вот очень простой пример: async def cpu_bound(fun_cpu_bound, params_fun):\n    with concurrent.futures.ProcessPoolExecutor() as executor:\n        return await loop.run_in_executor(executor, fun_cpu_bound, par",
+                    "score": 1,
+                    "is_accepted": false
+                },
+                {
+                    "text": "Базовый пример, выполняется асинхронно. import asyncio\n\nimport uvicorn as uvicorn\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n\n@app.get(\"/one\")\nasync def read_root():\n    await asyncio.sleep(10)\n    return {\"first_root\": \"one\"}\n\n\n@app.get(\"/two\")\nasync def read_item():\n    return {\"second_root\": \"two\"}\n\nif __name__ == \"__main__\":\n    uvicorn.run(app, host=\"0.0.0.0\", port=8000) https://fastapi.tiangolo.com/async/ https://fastapi.tiangolo.com/#create-it",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "многопоточность",
+                "асинхронность",
+                "multiprocessing",
+                "fastapi"
+            ],
+            "score": 2,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/1263427/%d0%90%d1%81%d0%b8%d0%bd%d1%85%d1%80%d0%be%d0%bd%d0%bd%d0%be%d1%81%d1%82%d1%8c-%d0%b2-fastapi-python",
+            "source": "stackoverflow_ru",
+            "published_at": "2021-03-29T13:50:57+00:00",
+            "collected_at": "2026-11-18T20:38:29.653699+00:00"
+        },
+        {
+            "id": "1602045",
+            "profession": "Python Developer",
+            "title": "как поправить MissingGreenlet SQLAlchemy python FastAPI",
+            "text": "У меня есть patch метод на обновление выглядит примерно так @router.patch(\"/{id}\", response_model=ResponseBlockSchema, status_code=status.HTTP_200_OK)\nasync def update_block_router(\n        update_data: UpdateBlockSchema,\n        block_id: str = Query(..., alias=\"id\"),\n        block_service: BlockService = Depends(get_block_service),\n):\n    block = await block_service.update_block(\n        block_id=uuid.UUID(block_id),\n        update_data=update_data.dict(),\n    )\n\n    if not block:\n        raise HTTPException(\n            status_code=status.HTTP_404_NOT_FOUND,\n            detail=\"Block not found\",\n        )\n\n    return block вот есть pydantic схемы для реквестов и респонсов class BaseBlockSchema(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n\n    type: Optional[str]\n    props: dict\n    order: int\n\n\nclass ChildBlockSchema(BaseBlockSchema):\n    pass\n\n\nclass ParentBlockSchema(BaseBlockSchema):\n    pageId: Optional[uuid.UUID]\n    parentId: Optional[uuid.UUID]\n\n\nclass CreateBlockSchema(ParentBlockSchema):\n    children: list[ChildBlockSchema]\n\n\nclass UpdateBlockSchema(ParentBlockSchema):\n    pass\n\n\nclass ResponseBlockSchema(ParentBlockSchema):\n    id: uuid.UUID\n\n\nclass ResponseBlockSchemaAfterCreate(ResponseBlockSchema):\n    children: list[ChildBlockSchema] не обращайте внимаение на схему для обновления, так как она не вписывается в концепцию патч метода, это дело поправимое )) еще можно заметить, что я подтягиваю зависимость block_service async def get_block_service(session: AsyncSession = Depends(get_async_session)) -> BlockService:\n    return BlockService(\n        BlockRepository(session=session),\n    ) вот еще часть конфиг файла from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession\n\nDATABASE_URL = f\"postgresql+asyncpg://{config.POSTGRES_USER}:{config.POSTGRES_PASSWORD}@{config.POSTGRES_HOST}:{config.POSTGRES_PORT}/{config.POSTGRES_DB}\"\n\n\nengine = create_async_engine(DATABASE_URL)\nasync_session_maker = async_sessionm",
+            "questions": [
+                "как поправить MissingGreenlet SQLAlchemy python FastAPI"
+            ],
+            "answers": [
+                {
+                    "text": "Из моей практики, такая ошибка появлялась, когда я пытался обращаться к полям relationship , предварительно не использовав selectinload . Проверьте, есть ли у вас обращения к подобным полям. Так же советую попробовать предварительно загрузить их через selectinload . О том, как он работает, можете прочитать в документации sqlalchemy по ссылке .",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "postgresql",
+                "sqlalchemy",
+                "fastapi",
+                "asyncpg"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1602045/%d0%ba%d0%b0%d0%ba-%d0%bf%d0%be%d0%bf%d1%80%d0%b0%d0%b2%d0%b8%d1%82%d1%8c-missinggreenlet-sqlalchemy-python-fastapi",
+            "source": "stackoverflow_ru",
+            "published_at": "2024-12-09T20:33:16+00:00",
+            "collected_at": "2026-11-18T20:38:29.654873+00:00"
+        },
+        {
+            "id": "1543961",
+            "profession": "Python Developer",
+            "title": "Микросервисы (Python, FastApi) не могут взаимодействовать при упаковке в контейнеры docker",
+            "text": "Стек: python, fastapi, httpx, docker, rest api. Помогите пожалуйста разобраться в следующем:\nСделал 3 сервиса. Все 3 сервиса работают при запуске их через терминал. При упаковке в Docker и запуске через docker-compose сервисы не могут общаться друг с другом. Каждый контейнер пингует все контейнеры по именам контейнеров. При запуске через терминал сервисы обращаются друг к другу через localhost. При запуске в docker localhost заменяется на имя необходимого контейнера, указанное в docker-compose.yml. При подключении через терминал к работающим контейнерам проверил правильно ли установлена переменная среды DOCKER_FLAG и правильно ли отрабатывает участок кода с её интерпретацией - работает правильно. В контейнере переменная DOCKER имеет значение True . Что попробовал сделать: Также пробовал заменять имя контейнера в адресе http://loader:8001/loader на http://host.docker.internal:8001/converter - результат не получил. Переустановка Docker тоже не помогла. Пробовал библиотеку requests и синхронный режим. Результат такой же. Работает при запуске сервисов из терминала, но не работает при разворачивании в контейнерах. Пробовал делать отдельную сеть backend в docker-compose.yml и связывать все 3 контейнера в неё - не помогло. Пробовал открывать порты только для контейнера loader 8000:8000 и не открывать портов для сервисов converter и saver - не помогло. Кратко приведу примеры файлов. docker-compose.yml version: \"3.8\"\n\nservices:\n  loader:\n    container_name: loader\n    build: loader/app\n    ports:\n      - \"8000:8000\"\n    depends_on:\n      - saver\n      - converter\n\n  converter:\n    container_name: converter\n    build: converter/app\n    ports:\n      - \"8001:8001\"\n\n  saver:\n    container_name: saver\n    build: saver/app\n    ports:\n      - \"8002:8002\"\n    volumes:\n      - ./saver/app/saved_files:/app/saved_files Dockerfile для сервиса loader FROM fnndsc/python-poetry\n\nUSER root\n\nRUN apt-get update && apt-get upgrade -y\nRUN apt-get install -y iputils-ping\n\nENV DOCKER_FLAG=1\n\nRUN ",
+            "questions": [
+                "Микросервисы (Python, FastApi) не могут взаимодействовать при упаковке в контейнеры docker"
+            ],
+            "answers": [
+                {
+                    "text": "loader:8000... и прочие адреса доступны только внутри docker сети ( worktest_default ). Поэтому когда вы формируете html страницу с формой для отправки файла в loader и отдаете клиенту, то в action={url} находится http://loader:8000 , который не доступен с хоста когда вы делаете запрос через браузер. Если у вас запрос на тот же сервис с которого пришла страница (т.е. loader отдал страницу и ему же мы отправляем ответ через форму), то вы можете использовать относительные адреса, вместо абсолютных, например action=/ , тогда браузер будет автоматически правильно вычислять нужный адрес. В вашем случае этого должно быть достаточно. Если вы хотите получать html форму из одного сервиса, а отправлять в другой, нарпимер loader отдает форму, а на converter отправляется запрос из браузера. То в таком случае правильный адрес, который loader должен отдавать в форме передают через конфигурацию, например переменные окружения.",
+                    "score": 0,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python-3.x",
+                "docker",
+                "fastapi",
+                "микросервисы"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1543961/%d0%9c%d0%b8%d0%ba%d1%80%d0%be%d1%81%d0%b5%d1%80%d0%b2%d0%b8%d1%81%d1%8b-python-fastapi-%d0%bd%d0%b5-%d0%bc%d0%be%d0%b3%d1%83%d1%82-%d0%b2%d0%b7%d0%b0%d0%b8%d0%bc%d0%be%d0%b4%d0%b5%d0%b9%d1%81%d1%82%d0%b2%d0%be%d0%b2%d0%b0%d1%82%d1%8c-%d0%bf%d1%80%d0%b8-%d1%83%d0%bf%d0%b0%d0%ba%d0%be%d0%b2%d0%ba%d0%b5-%d0%b2-%d0%ba%d0%be%d0%bd%d1%82%d0%b5%d0%b9%d0%bd",
+            "source": "stackoverflow_ru",
+            "published_at": "2023-10-04T08:28:19+00:00",
+            "collected_at": "2026-11-18T20:38:29.656696+00:00"
+        },
+        {
+            "id": "1575750",
+            "profession": "Python Developer",
+            "title": "Какой фреймворк на python использовать для написания админ панели приложения? Я использую FastAPI с psycopg2 postgres",
+            "text": "Пишу приложение на python использую fastapi и psycopg2 для соединения с БД postgres. Подскажите, какой фреймворк лучше подойдет для соединения с такой БД",
+            "questions": [
+                "Какой фреймворк на python использовать для написания админ панели приложения? Я использую FastAPI с psycopg2 postgres"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "postgresql",
+                "fastapi",
+                "psycopg2",
+                "поиск-фреймворков"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1575750/%d0%9a%d0%b0%d0%ba%d0%be%d0%b9-%d1%84%d1%80%d0%b5%d0%b9%d0%bc%d0%b2%d0%be%d1%80%d0%ba-%d0%bd%d0%b0-python-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d1%82%d1%8c-%d0%b4%d0%bb%d1%8f-%d0%bd%d0%b0%d0%bf%d0%b8%d1%81%d0%b0%d0%bd%d0%b8%d1%8f-%d0%b0%d0%b4%d0%bc%d0%b8%d0%bd-%d0%bf%d0%b0%d0%bd%d0%b5%d0%bb%d0%b8-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f-%d0%af",
+            "source": "stackoverflow_ru",
+            "published_at": "2024-04-11T16:59:50+00:00",
+            "collected_at": "2026-11-18T20:38:29.656783+00:00"
+        },
+        {
+            "id": "1593961",
+            "profession": "Python Developer",
+            "title": "Как можно увеличить скорость загрузки в S3 хранилище?",
+            "text": "Я использую python + fastapi и aiobotocore для загрузки файлов в S3 хранилище.\nВот мой роутер который отправляет файл в хранилище\n(Код урезан) @upload_router.post('')\nasync def upload_file(\n        request: Request, \n        file: Annotated[UploadFile, File()], \n        user_service: Annotated[UserService, Depends(get_user_service)], \n        file_service: Annotated[FileService, Depends(get_file_service)],\n        session: Annotated[AsyncSession, Depends(get_async_session)],\n    ):\n \n    await s3_client.upload_file(file.file, f'{unique_filename}_{file.filename}') вот код самой загрузки class S3Client:\n    def __init__(\n            self,\n            aws_access_key_id: str,\n            aws_secret_access_key: str,\n            endpoint_url: str,\n            region_name: str,\n            bucket_name: str,\n    ):\n        self.config = {\n            \"aws_access_key_id\": aws_access_key_id,\n            \"aws_secret_access_key\": aws_secret_access_key,\n            \"endpoint_url\": endpoint_url,\n            \"region_name\": region_name\n        }\n        self.bucket_name = bucket_name\n        self.session = get_session()\n\n    @asynccontextmanager\n    async def get_client(self):\n        async with self.session.create_client(\"s3\", **self.config) as client:\n            yield client\n\n    async def upload_file( self, file_path: bytes, file_name: str):\n        try:\n            async with self.get_client() as client:\n                await client.put_object(\n                    Bucket=self.bucket_name,\n                    Key=file_name,\n                    Body=file_path,\n                )\n        except ClientError:\n            raise ClientError например файл размером 20 мб, отправляется 8 секунд.",
+            "questions": [
+                "Как можно увеличить скорость загрузки в S3 хранилище?"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "fastapi",
+                "s3"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1593961/%d0%9a%d0%b0%d0%ba-%d0%bc%d0%be%d0%b6%d0%bd%d0%be-%d1%83%d0%b2%d0%b5%d0%bb%d0%b8%d1%87%d0%b8%d1%82%d1%8c-%d1%81%d0%ba%d0%be%d1%80%d0%be%d1%81%d1%82%d1%8c-%d0%b7%d0%b0%d0%b3%d1%80%d1%83%d0%b7%d0%ba%d0%b8-%d0%b2-s3-%d1%85%d1%80%d0%b0%d0%bd%d0%b8%d0%bb%d0%b8%d1%89%d0%b5",
+            "source": "stackoverflow_ru",
+            "published_at": "2024-09-16T06:41:03+00:00",
+            "collected_at": "2026-11-18T20:38:29.657018+00:00"
+        },
+        {
+            "id": "1600341",
+            "profession": "Python Developer",
+            "title": "FastAPI: как совместить хостинг приложения и статических файлов?",
+            "text": "Вот я пишу \"Hello world\" с использованием FastAPI: файл main.py, в котором написано import uvicorn\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\nif __name__ == '__main__':\n    uvicorn.run(\"main:app\", host='0.0.0.0', port=80, reload=True)\n\n@app.get(\"/api\")\nasync def root():\n    return {\"message\": \"Hello World\"} Перед этим я установил зависимости pip install fastapi\npip install uvicorn Всё хорошо, я запускаю приложение python main.py , и при заходе в браузер по url http://127.0.0.1/api получаю заветный json {\"message\":\"Hello World\"} Затем я добавляю хостинг статических файлов:\nсоздаю директорию static, кладу туда index.html с какой нибудь строчкой, и меняю свой python файл так: import uvicorn\nfrom fastapi import FastAPI\nfrom fastapi.staticfiles import StaticFiles\n\napp = FastAPI()\napp.mount('/', StaticFiles(directory='static',html=True))\n\nif __name__ == '__main__':\n    uvicorn.run(\"main:app\", host='0.0.0.0', port=80, reload=True)\n\n@app.get(\"/api\")\nasync def root():\n    return {\"message\": \"Hello World\"} При этом у меня работает хостинг статического файла - по url http://127.0.0.1/ открывается index.html, но...\nзапрос по прежнему url http://127.0.0.1/api работать перестаёт Причем, если я поменяю строчку, задающую роутинг для статических файлов на app.mount('/static/', StaticFiles(directory='static',html=True)) то оба запроса, и по http://127.0.0.1/static/ , и по http://127.0.0.1/api - отработают правильно. Кажется, что есть конфликт роутингов: роутинг по более короткому пути / \"перебивает\" роутинг по пути /api Как бы мне сделать, чтобы и index.html грузился, причем по \"короткому\" url http://127.0.0.1/ , и мой api по пути http://127.0.0.1/api тоже работал? Поясню:\nя хочу на основе FastAPI сделать такой \"сайт для бедных\": чтобы с него грузилась страница с JS-ом, который после загрузки начинает обращаться к api Спасибо!",
+            "questions": [
+                "FastAPI: как совместить хостинг приложения и статических файлов?"
+            ],
+            "answers": [
+                {
+                    "text": "Спасибо большое insolor и CrazyElf! Вы указали что искать, и готовый ответ нашелся вот здесь: https://stackoverflow.com/questions/60716529/download-file-using-fastapi Таким образом, вот первый работающий вариант того, что я хотел: import uvicorn\nfrom fastapi import FastAPI\nfrom starlette.responses import FileResponse\n\napp = FastAPI()\n\n@app.get(\"/\")\nasync def read_index():\n    return FileResponse('index.html')\n\n@app.get(\"/api\")\nasync def root():\n    return {\"message\": \"Hello World\"}\n\nif __name__ == '__main__':\n    uvicorn.run(\"main:app\", host='0.0.0.0', port=80, reload=True) а вот - второй: (лично мне монтирование путей через mount нравится больше, чем через \"магические атрибуты\") import uvicorn\nfrom fastapi import FastAPI\nfrom fastapi.staticfiles import StaticFiles\n\napp = FastAPI()\n\n@app.get('/api')\ndef api_app():\n    return {\"message\": \"Hello World\"}\n\napp.mount('/api', app)\napp.mount('/', StaticFiles(directory='static',html=True))\n\nif __name__ == '__main__':\n    uvicorn.run(\"main:app\", host='0.0.0.0', port=80, reload=True) Запуск: python main.py Затем надо в браузере зайти на http://localhost/",
+                    "score": 1,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python",
+                "html",
+                "fastapi"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1600341/fastapi-%d0%ba%d0%b0%d0%ba-%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%b8%d1%82%d1%8c-%d1%85%d0%be%d1%81%d1%82%d0%b8%d0%bd%d0%b3-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f-%d0%b8-%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d1%85-%d1%84%d0%b0%d0%b9%d0%bb%d0%be%d0%b2",
+            "source": "stackoverflow_ru",
+            "published_at": "2024-11-20T06:23:53+00:00",
+            "collected_at": "2026-11-18T20:38:29.657773+00:00"
+        },
+        {
+            "id": "1486375",
+            "profession": "Python Developer",
+            "title": "FastApi NGINX gunicorn проблема при использовании сокета",
+            "text": "/etc/systemd/system/fastAPI.service: [Unit]\n\nDescription=Gunicorn Daemon for FastAPI Demo Application\n\nAfter=network.target\n\n\n\n[Service]\n\nUser=root\n\nGroup=www-data\n\nWorkingDirectory=/home/xomic/fastAPI\n\nExecStart=/home/xomic/fastAPI/venv/bin/gunicorn app:app --workers 2 -k uvicorn.workers.UvicornWorker --bind unix:appname.sock\n\n\n\n[Install]\n\nWantedBy=multi-user.target sudo systemctl status fastAPI: (venv) xomic@vm146039:~/fastAPI$ sudo curl --unix-socket unix:/home/xomic/fastAPI/appname.sock localhost\ncurl: (7) Couldn't connect to server Собственно не могу понять почему не работает.\nЗадача развернуть FastApi Python, на уже готовый NGINX SSL сервер.\nПробовал по этому гайду: ССЫЛКА Спасибо! Код заглушка:\nПри запуске не через  сервис все работает, но чтоб прикрутить к серверу нужен сервис, как я понял. from fastapi import FastAPI\n\napp = FastAPI()\n\n\n@app.get(\"/\")\nasync def home():\n    return {\"message\": \"Hello World\"}",
+            "questions": [
+                "FastApi NGINX gunicorn проблема при использовании сокета"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "ubuntu",
+                "nginx",
+                "gunicorn",
+                "fastapi"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1486375/fastapi-nginx-gunicorn-%d0%bf%d1%80%d0%be%d0%b1%d0%bb%d0%b5%d0%bc%d0%b0-%d0%bf%d1%80%d0%b8-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b8-%d1%81%d0%be%d0%ba%d0%b5%d1%82%d0%b0",
+            "source": "stackoverflow_ru",
+            "published_at": "2023-01-14T13:10:21+00:00",
+            "collected_at": "2026-11-18T20:38:29.658193+00:00"
+        },
+        {
+            "id": "896501",
+            "profession": "Java Developer",
+            "title": "Android->localhost->Java Spring",
+            "text": "Задача заключается в передаче логина и пароля(Android App) в ,поднятый на Java Spring, localhost,а затем уже забрать из самого Java. Сам я не местный, прошу дать направление поиска.\nКод android: HttpURLConnection connection = null;\n            URL url = new URL(\"10.0.2.2:8080/home.html\");\n            connection = (HttpURLConnection) url.openConnection();\n            connection.setDoOutput(true);\n            connection.setDoInput(true);\n            connection.setRequestMethod(\"POST\");\n            connection.setUseCaches(false);\n            connection.setConnectTimeout(720000000);\n            connection.setReadTimeout(72000000);\n            OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());\n            output.write(json);\n            output.flush();\n            output.close();\n            System.out.println(json);\n            //  int HttpResult = connection.getResponseCode();\n            connection.disconnect(); код java: URL url = new URL(\"http://10.0.2.2:8080/home.html\");\n            HttpURLConnection conn = (HttpURLConnection) url.openConnection();\n            conn.setRequestMethod(\"GET\");\n            conn.setRequestProperty(\"Accept\", \"application/json\");\n\n            if (conn.getResponseCode() != 200) {\n                throw new RuntimeException(\"Failed : HTTP error code : \"\n                        + conn.getResponseCode());\n            }\n\n            BufferedReader br = new BufferedReader(new InputStreamReader(\n                    (conn.getInputStream())));\n\n            String output;\n            System.out.println(\"Output from Server .... \\n\");\n            while ((output = br.readLine()) != null) {\n                System.out.println(output);\n            }\n\n            conn.disconnect(); Вероятно я что то не учёл, с android вообще встретился впервые, со стороны java опыта в таких вещах тоже не густо. Прошу помощи у сообщества) \nP.S: Буду искренне рад найти собеседника на данную тему.",
+            "questions": [
+                "Android->localhost->Java Spring"
+            ],
+            "answers": [],
+            "tags": [
+                "java",
+                "android",
+                "spring",
+                "localhost"
+            ],
+            "score": 1,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/896501/android-localhost-java-spring",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-10-22T17:35:35+00:00",
+            "collected_at": "2026-11-18T20:38:35.201245+00:00"
+        },
+        {
+            "id": "469477",
+            "profession": "Java Developer",
+            "title": "Java Spring Framework: Component, Repository, Service - различия",
+            "text": "Поясните в чем разница между: Component , Repository , Service в Java Spring Framework . Приведите простые примеры использования.",
+            "questions": [
+                "Java Spring Framework: Component, Repository, Service - различия"
+            ],
+            "answers": [
+                {
+                    "text": "@Component - это любой произвольный бин, который Spring сможет найти через autoscan . Пример: вы реализовали какой-то класс и хотите сделать его экземпляр доступным через @Autowired . Остальные аннотации обозначают слои  типичной многослойной архитектуры: @Repository - это @Component с семантикой DAO-слоя. То место, где вы ходите в базу данных. Spring завернет бросаемые классом исключения в DataAccessException . @Service - это @Component с семантикой слоя бизнес-логики. @Controller - это @Component с семантикой web-слоя. Такие бины Spring превратит в сервлеты.",
+                    "score": 17,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java",
+                "spring"
+            ],
+            "score": 5,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/469477/java-spring-framework-component-repository-service-%d1%80%d0%b0%d0%b7%d0%bb%d0%b8%d1%87%d0%b8%d1%8f",
+            "source": "stackoverflow_ru",
+            "published_at": "2015-11-25T12:49:36+00:00",
+            "collected_at": "2026-11-18T20:38:35.202177+00:00"
+        },
+        {
+            "id": "469487",
+            "profession": "Java Developer",
+            "title": "Java Spring Framework: структура директорий веб проекта",
+            "text": "Посоветуйте структуру директорий для веб проекта на основе Java Spring Framework . Проект большой, в нем множество разделов, которые как мне кажется было бы хорошо разделить на модули. Раннее работал с PHP, использовал паттерн HMVC - он был для меня удобен. Где была примерно такая структура директорий: application ... modules module1 configs controllers models views module2 ... Но, не уверен, что в Java Spring подобная структура будет разумной.",
+            "questions": [
+                "Java Spring Framework: структура директорий веб проекта"
+            ],
+            "answers": [],
+            "tags": [
+                "java",
+                "spring"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/469487/java-spring-framework-%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%b0-%d0%b4%d0%b8%d1%80%d0%b5%d0%ba%d1%82%d0%be%d1%80%d0%b8%d0%b9-%d0%b2%d0%b5%d0%b1-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b0",
+            "source": "stackoverflow_ru",
+            "published_at": "2015-11-25T13:26:14+00:00",
+            "collected_at": "2026-11-18T20:38:35.203868+00:00"
+        },
+        {
+            "id": "1231904",
+            "profession": "Java Developer",
+            "title": "Java Spring boot",
+            "text": "При попытке компиляции Spring приложения возникает ошибка. Понятия не имею, что с этим делать, много тем посмотрел, но ответа так и не нашел, буду благодарен за помощь! [ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.4.1:run (default-cli) on project sitespring: Application finished with exit code: 1 -> [Help 1] Apache maven 3.6.3 version, java 1.8.0_261 pom.xml <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n    xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>2.4.1</version>\n        <relativePath/> <!-- lookup parent from repository -->\n    </parent>\n    <groupId>com.labwork</groupId>\n    <artifactId>sitespring</artifactId>\n    <version>0.0.1-SNAPSHOT</version>\n    <name>sitespring</name>\n    <description>Demo project for Spring Boot</description>\n\n\n    <properties>\n        <java.version>1.8</java.version>\n    </properties>\n\n    <dependencies>\n        <dependency>\n            <groupId>org.springframework.boot</groupId>\n            <artifactId>spring-boot-starter-web</artifactId>\n        </dependency>\n\n        <dependency>\n            <groupId>org.springframework.boot</groupId>\n            <artifactId>spring-boot-starter-test</artifactId>\n            <scope>test</scope>\n        </dependency>\n    </dependencies>\n\n    <build>\n        <plugins>\n            <plugin>\n                <groupId>org.springframework.boot</groupId>\n                <artifactId>spring-boot-maven-plugin</artifactId>\n            </plugin>\n        </plugins>\n    </build>\n\n</project> Основной файл package com.labwork.sitespring;\n\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplica",
+            "questions": [
+                "Java Spring boot"
+            ],
+            "answers": [],
+            "tags": [
+                "java",
+                "spring"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1231904/java-spring-boot",
+            "source": "stackoverflow_ru",
+            "published_at": "2021-01-15T15:33:59+00:00",
+            "collected_at": "2026-11-18T20:38:35.206207+00:00"
+        },
+        {
+            "id": "856794",
+            "profession": "Java Developer",
+            "title": "Java spring boot custom property type",
+            "text": "Я использую Java + Spring Boot, возникла необходимость добавить в файл application.properties поле - экземпляр какого-то своего типа (не String, не Integer, не...)\nНапример как-то так: @Configuration\n@ConfigurationProperties\npublic class MySuperCustomProperties {\n    private SomeClass someProperty;\n\n    // get set...\n} (Где SomeClass это какой-то собственный тип данных.) Можно ли так сделать и если да, то как? (Нет ли такого интерфейса (например) реализовав который Spring сможет сам кастить строку в SomeClass)",
+            "questions": [
+                "Java spring boot custom property type"
+            ],
+            "answers": [
+                {
+                    "text": "Вы можете для этого случая использовать @Bean. application.properties: springboot.field=field MySuperCustomProperties.class: @Configuration\npublic class MySuperCustomProperties {\n\n    @Bean\n    public SomeClass someProperty( @Value(\"${springboot.field}\") String field ) {\n        SomeClass someClass = new SomeClass();\n        someClass.setField(field);\n        return someClass;\n    }\n\n} SomeClass.class: public class SomeClass {\n\n    private String field;\n\n    public String getField() {\n        return field;\n    }\n\n    public void setField(String field) {\n        this.field = field;\n    }\n\n} Application.class: @SpringBootApplication\npublic class Application implements CommandLineRunner {\n\n    @Autowired\n    private SomeClass someClass;\n\n    public static void main(String[] args) {\n        SpringApplication.run(Application.class);\n    }\n\n    @Override\n    public void run(String... args) throws Exception {\n        System.out.println(someClass.getField());\n    }\n\n}",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java",
+                "spring",
+                "spring-boot",
+                "properties",
+                "configuration"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/856794/java-spring-boot-custom-property-type",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-07-17T14:52:49+00:00",
+            "collected_at": "2026-11-18T20:38:35.206965+00:00"
+        },
+        {
+            "id": "575528",
+            "profession": "Java Developer",
+            "title": "Как проверять на пустоту сессию в java spring?",
+            "text": "Как в java spring MVC проверить на наличие сохраненной сессии?\nК примеру на php я делал так: if(!$_SESSION['a']) $this->redirect('bla bla') А как примерно такую же вещь сделать с сессией на spring MVC?",
+            "questions": [
+                "Как проверять на пустоту сессию в java spring?"
+            ],
+            "answers": [
+                {
+                    "text": "Если я Вас правильно понял, смотрите в сторону HttpSession , например: String sessionUserId = httpSession.getAttribute(\"USER_ID\") != null ? httpSession.getAttribute(\"USER_ID\").toString() : \"USER_UNDEFINED\"; Атрибуты можно получить : httpSession.getAttributeNames() Также время последнего обращения, айди сессии и многое другое.\nЕсли речь идет о контроллерах, то добавьте в параметры, например: @RequestMapping(value = \"/Services/getData\", method = RequestMethod.POST)\n@ResponseStatus(HttpStatus.OK)\npublic ResponseEntity<String> getData(@RequestParam(value = \"param\", required = true) String param, HttpServletRequest request, HttpSession httpSession) {\n    ...\n}",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java",
+                "spring-mvc"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/575528/%d0%9a%d0%b0%d0%ba-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d1%8f%d1%82%d1%8c-%d0%bd%d0%b0-%d0%bf%d1%83%d1%81%d1%82%d0%be%d1%82%d1%83-%d1%81%d0%b5%d1%81%d1%81%d0%b8%d1%8e-%d0%b2-java-spring",
+            "source": "stackoverflow_ru",
+            "published_at": "2016-10-09T10:28:34+00:00",
+            "collected_at": "2026-11-18T20:38:35.207425+00:00"
+        },
+        {
+            "id": "1266998",
+            "profession": "Java Developer",
+            "title": "Java Spring метод который помечен @Async() и @Transactional() тормозит",
+            "text": "Java Spring метод который помечен @Async() и @Transactional() тормозит Почему, когда отрабатывает метод List<OnlinerCatalog> onlinerCatalogDb = getOnlinerCatalogAndChildren(); Скорость перебора метода “test(Onliner onliner)”, падает примерно в 100 раз?\nПричем если убрать аннотацию @Transactional() или закомментировать строку “List onlinerCatalogDb = getOnlinerCatalogAndChildren();” , то всё работает быстро @Service\n@EnableAsync\npublic class OnlinerStructureService {\n\n    @Value(\"${upload.onlinerStructure}\")\n    private String pathStructure;\n\n\n    @Autowired\n    private OnlinerProductRepo onlinerProductRepo;\n\n    @Autowired\n    private OnlinerCatalogRepo onlinerCatalogRepo;\n\n\n    @Transactional()\n    @Async()\n    public void onlinerStructureLoading() {\n        System.out.println(\"Читаем каталог онлайнера из файла\");\n        Onliner onliner = readStructureFromFile();\n\n        System.out.println(\"Обрабатываем модели онлайнера\");\n        test(onliner);\n    }\n\n\n\n\n    public void test(Onliner onliner) {\n\n        List<OnlinerCatalog> onlinerCatalogDb = getOnlinerCatalogAndChildren();\n\n        int countOnlinerModelId = 0;\n        for (Category elCategory : onliner.getCategory()) {\n            for (Vendor elVendor : elCategory.getVendor()) {\n                for (Model elModel : elVendor.getModel()) {\n                    int onlinerModelId = elModel.getId();\n                    boolean isAnyOneTrue = onlinerProductRepo.existsByOnlinerId(onlinerModelId);\n                    countOnlinerModelId++;\n                    System.out.println(\"onlinerModelId - \" + countOnlinerModelId); // печатаем сколько элементов обработано\n                }\n            }\n        }\n    }\n\n    public List<OnlinerCatalog> getOnlinerCatalogAndChildren() {         // Получаем наш каталог онлайнера (структуру)\n        List<OnlinerCatalog> onlinerCatalog = onlinerCatalogRepo.findAll();\n        for (OnlinerCatalog el : onlinerCatalog) { // Заполняем чилдренов\n            List<OnlinerCatalog> children = onl",
+            "questions": [
+                "Java Spring метод который помечен @Async() и @Transactional() тормозит"
+            ],
+            "answers": [],
+            "tags": [
+                "java",
+                "spring"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1266998/java-spring-%d0%bc%d0%b5%d1%82%d0%be%d0%b4-%d0%ba%d0%be%d1%82%d0%be%d1%80%d1%8b%d0%b9-%d0%bf%d0%be%d0%bc%d0%b5%d1%87%d0%b5%d0%bd-async-%d0%b8-transactional-%d1%82%d0%be%d1%80%d0%bc%d0%be%d0%b7%d0%b8%d1%82",
+            "source": "stackoverflow_ru",
+            "published_at": "2021-04-06T20:33:26+00:00",
+            "collected_at": "2026-11-18T20:38:35.208206+00:00"
+        },
+        {
+            "id": "1376347",
+            "profession": "Java Developer",
+            "title": "Java, Spring как сделать фильтр на сайте по параметрам?",
+            "text": "Java, Spring как сделать фильтр на сайте по параметрам? Пример:\nЕсть и-нет магазин, у товаров есть параметры (вес, размер, разрешение экрана, цвет и т.п.)\nПользователь на сайте выбирает нужные ему отборы и получает выдачу товаров. Куда копать, что почитать?",
+            "questions": [
+                "Java, Spring как сделать фильтр на сайте по параметрам?"
+            ],
+            "answers": [
+                {
+                    "text": "Сделал с использованием Spring Data Specifications, работает отлично\nИнфу черпал по ссылкам ниже https://overcoder.net/q/422962/java-spring-rest-api-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0-%D0%BC%D0%BD%D0%BE%D0%B3%D0%B8%D1%85-%D0%BD%D0%B5%D0%BE%D0%B1%D1%8F%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85-%D0%BF%D0%B0%D1%80%D0%B0%D0%BC%D0%B5%D1%82%D1%80%D0%BE%D0%B2 https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/ https://reflectoring.io/spring-data-specifications/",
+                    "score": 0,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java",
+                "spring"
+            ],
+            "score": -2,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1376347/java-spring-%d0%ba%d0%b0%d0%ba-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d1%84%d0%b8%d0%bb%d1%8c%d1%82%d1%80-%d0%bd%d0%b0-%d1%81%d0%b0%d0%b9%d1%82%d0%b5-%d0%bf%d0%be-%d0%bf%d0%b0%d1%80%d0%b0%d0%bc%d0%b5%d1%82%d1%80%d0%b0%d0%bc",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-01-29T11:19:18+00:00",
+            "collected_at": "2026-11-18T20:38:35.208609+00:00"
+        },
+        {
+            "id": "1307730",
+            "profession": "Java Developer",
+            "title": "Запомнить объект для запросов в рамках одной сессии в Java spring boot",
+            "text": "Как использовать объекты с сохраненным состоянием в рамках одной сессии, без сохранения объекта в бд? Сервис написан на Java. Spring boot.",
+            "questions": [
+                "Запомнить объект для запросов в рамках одной сессии в Java spring boot"
+            ],
+            "answers": [
+                {
+                    "text": "обычно в метод как аргумент добавляют HttpSession session - сессию и сохраняют в нем объект через вызов метода session.setAttribute(key, value); ,если объектов много, то создать статичную map-у static Map<String, HttpSession> connectedUsers;",
+                    "score": 0,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java",
+                "spring",
+                "boot"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1307730/%d0%97%d0%b0%d0%bf%d0%be%d0%bc%d0%bd%d0%b8%d1%82%d1%8c-%d0%be%d0%b1%d1%8a%d0%b5%d0%ba%d1%82-%d0%b4%d0%bb%d1%8f-%d0%b7%d0%b0%d0%bf%d1%80%d0%be%d1%81%d0%be%d0%b2-%d0%b2-%d1%80%d0%b0%d0%bc%d0%ba%d0%b0%d1%85-%d0%be%d0%b4%d0%bd%d0%be%d0%b9-%d1%81%d0%b5%d1%81%d1%81%d0%b8%d0%b8-%d0%b2-java-spring-boot",
+            "source": "stackoverflow_ru",
+            "published_at": "2021-07-22T10:18:40+00:00",
+            "collected_at": "2026-11-18T20:38:35.208859+00:00"
+        },
+        {
+            "id": "543620",
+            "profession": "Java Developer",
+            "title": "Java Spring MVC",
+            "text": "Как подключить Spring MVC к обычному MAVEN проекту?",
+            "questions": [
+                "Java Spring MVC"
+            ],
+            "answers": [
+                {
+                    "text": "Подключите спринговые депенденси в pom.xml . <!-- Spring framework -->\n    <dependency>\n        <groupId>org.springframework</groupId>\n        <artifactId>spring-context</artifactId>\n        <version>${org.springframework-version}</version>\n        <exclusions>\n            <exclusion>\n                <groupId>commons-logging</groupId>\n                <artifactId>commons-logging</artifactId>\n            </exclusion>\n        </exclusions>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework</groupId>\n        <artifactId>spring-context-support</artifactId>\n        <version>${org.springframework-version}</version>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework</groupId>\n        <artifactId>spring-webmvc</artifactId>\n        <version>${org.springframework-version}</version>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework</groupId>\n        <artifactId>spring-orm</artifactId>\n        <version>${org.springframework-version}</version>\n    </dependency>\n    <dependency>\n        <groupId>org.springframework</groupId>\n        <artifactId>spring-web</artifactId>\n        <version>${org.springframework-version}</version>\n    </dependency> Сконфигурировать проект. Добавить конфигурационный файл application-context.xml в папку /webapp/WEB-INF/.. Подключить файл через project facets. \nДобавить web.xml или создать архитип web-applicaiton и конф файл в web.xml . Задеплоить.",
+                    "score": 4,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java",
+                "spring"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/543620/java-spring-mvc",
+            "source": "stackoverflow_ru",
+            "published_at": "2016-07-11T09:44:17+00:00",
+            "collected_at": "2026-11-18T20:38:35.209107+00:00"
+        },
+        {
+            "id": "800681",
+            "profession": "Java Developer",
+            "title": "Какие на сегодняшний день наиболее актуальные технологии для java backend?",
+            "text": "Какие на сегодняшний день наиболее актуальные технологии для web java backend? Какие фреймы от js полезно знать?",
+            "questions": [
+                "Какие на сегодняшний день наиболее актуальные технологии для java backend?"
+            ],
+            "answers": [
+                {
+                    "text": "Наиболее приемлемый/удобный/пушистый стек: Spring Boot|Security|Data|Hibernate на фронте: AngularJS|Velocity (исключительно собственное мнение)",
+                    "score": 5,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/800681/%d0%9a%d0%b0%d0%ba%d0%b8%d0%b5-%d0%bd%d0%b0-%d1%81%d0%b5%d0%b3%d0%be%d0%b4%d0%bd%d1%8f%d1%88%d0%bd%d0%b8%d0%b9-%d0%b4%d0%b5%d0%bd%d1%8c-%d0%bd%d0%b0%d0%b8%d0%b1%d0%be%d0%bb%d0%b5%d0%b5-%d0%b0%d0%ba%d1%82%d1%83%d0%b0%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d0%b8-%d0%b4%d0%bb%d1%8f-java-backend",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-03-17T17:35:55+00:00",
+            "collected_at": "2026-11-18T20:38:35.209358+00:00"
+        },
+        {
+            "id": "194945",
+            "profession": "Java Developer",
+            "title": "Java Backend for Android",
+            "text": "Пишу backend для мобильной платформы. Раньше писал только под Web-клиентов, есть уже почти готовое приложение написанное на Spring+Hibernate, необходимо переделать под REST JSON. Вот интересует как поступить с регистрацией, написанной на Spring Security и есть ли какие то нюансы с работой под mobile. Не нашел нормальных примеров. Заранее спасибо!",
+            "questions": [
+                "Java Backend for Android"
+            ],
+            "answers": [
+                {
+                    "text": "Spring действительно предоставляет почти всё что нужно для разработки REST приложений, но вот в части Spring Security & AJAX не всё так просто как хотелось бы -- наверняка понадобится переопределить пару-тройку классов попутно разобравшись как внутри устроен Spring Security. По-поводу разработки под мобильные приложения, возможно, может быть полезен проект Spring Mobile : Quick Spring Mobile 1.0 Tutorial Creating a mobile version of your website with Spring Mobile and Sitemesh",
+                    "score": 1,
+                    "is_accepted": false
+                },
+                {
+                    "text": "Spring Mobile говорят хорош для моб сайтов, но не для обычных апп.",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java-ee",
+                "java",
+                "rest",
+                "spring"
+            ],
+            "score": 1,
+            "answer_count": 3,
+            "url": "https://ru.stackoverflow.com/questions/194945/java-backend-for-android",
+            "source": "stackoverflow_ru",
+            "published_at": "2013-02-20T17:06:29+00:00",
+            "collected_at": "2026-11-18T20:38:35.209625+00:00"
+        },
+        {
+            "id": "766568",
+            "profession": "Java Developer",
+            "title": "Backend на Java",
+            "text": "Доброе время суток. Начал учиться backend, но видео-курс на ютубе не до конца закончен и у меня осталась пара вопросов. \"Учитель\" все уроки работал лишь с одним классом \"MyServlet.java\", который наследовался от HTTPServlet и имел два метода GET и POST ( насчёт этих методов понятно). Например, при регистрации пользователь передаёт некоторые данные <!DOCTYPE html>\r\n<html>\r\n<head>\r\n<meta charset=\"UTF-8\">\r\n<title>Регистрация</title>\r\n</head>\r\n<body>\t\r\n\t<form method = \"POST\" action =\"MyServlet\">\r\n\tИмя<input type = \"text\" name = \"name\">\r\n\tВозраст<input type =\"text\" name = \"age\">\r\n\tЭлектронная почта<input type = \"text\" name = \"email\">\r\n\t<input type = \"submit\" value = \"Зарегистрировать\">\r\n\t</form>\r\n</body>\r\n</html> Далее в методе POST берутся эти параметры и пользователь регистрируется String name = request.getParameter(\"name\");\nString age = request.getParameter(\"age\");\nString email = request.getParameter(\"email\"); А если мы с другой html страницы хотим передать совсем другие параметры? Получается для каждой страницы писать свой java класс со своими GET и POST и указывать в html класс и метод? <!DOCTYPE html>\r\n<html>\r\n<head>\r\n<meta charset=\"UTF-8\">\r\n<title>Информация пользователя</title>\r\n</head>\r\n<body>\r\n\t<form method = \"METHOD\" action = \"CLASS\">\r\n\t.....\r\n\t</form>\r\n</body>\r\n</html>",
+            "questions": [
+                "Backend на Java"
+            ],
+            "answers": [
+                {
+                    "text": "Да, если использовать чистые сервлеты, то на каждый адрес надо писать свой сервлет(класс). Это можно заметить по файлу web.xml или аннотациям над сервлетами. Один класс может содержать только по одному методу doGet , doPost , doPut ..., дублирование методов внутри класса не позволит компилятор. Соответственно на каждый адрес пишется свой сервлет. Можно использовать Spring. Он использует сервлеты, но вам не надо будет создавать кучу классов. Используя аннотацию @RequestMapping можно задать и метод запроса и адрес, который будет случать метод.",
+                    "score": 3,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java",
+                "backend"
+            ],
+            "score": -1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/766568/backend-%d0%bd%d0%b0-java",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-01-04T15:19:22+00:00",
+            "collected_at": "2026-11-18T20:38:35.211431+00:00"
+        },
+        {
+            "id": "670463",
+            "profession": "Java Developer",
+            "title": "Целесообразность использования Java в написании backend-а",
+            "text": "Не думаю, что использование сервлетов и tomcat является популярным способом написания бэкенда для сервисов. Так вот, чтобы вопрос не был слишком общим, спрошу: с помощью каких средств (и почему) бэкенд писать лучше всего (конкретно в плане производительности, легкости, скорости работы, удобства для работы фронтендеров) и по каким критериям Java-способ написания бэкенда плох и почему? Например, node.js является одним из самых популярных средств для бэкенда, чем конкретно Java хуже для использования в тех же целях?",
+            "questions": [
+                "Целесообразность использования Java в написании backend-а"
+            ],
+            "answers": [
+                {
+                    "text": "Главное преимущество и проклятие скриптовых языков - их динамическая природа. С одной стороны это даёт быстрый цикл разработки, а с другой утяжеляет поддержку крупных проектов. В строготипизорванной Java большая часть ошибок, особенно глупых, уходит на этапе компиляции. С другой стороны, чтобы запустить простой проект на Java придётся выполнить много лишних телодвижений. Ну и всем известная смешная картинка Поэтому критерии лучше/хуже надо рассматривать в контексте особенностей конкретного проекта и выбирать инструмент под задачу, не забивать кувалдой шпильки и не стучать ювелирным молоточком по железнодорожному костылю.",
+                    "score": 6,
+                    "is_accepted": true
+                },
+                {
+                    "text": "Зависит от размера приложения и планируемого срока жизни проекта. Чем больше приложение и больше планируемый срок его существования, тем больше плюсов получит Java. И наоборот - на маленьких проектах, и на краткосрочных проектах скорее всего Node.js будет предпочтительнее.",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java",
+                "node.js",
+                "сервер",
+                "веб-сервер"
+            ],
+            "score": -1,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/670463/%d0%a6%d0%b5%d0%bb%d0%b5%d1%81%d0%be%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%bd%d0%be%d1%81%d1%82%d1%8c-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d1%8f-java-%d0%b2-%d0%bd%d0%b0%d0%bf%d0%b8%d1%81%d0%b0%d0%bd%d0%b8%d0%b8-backend-%d0%b0",
+            "source": "stackoverflow_ru",
+            "published_at": "2017-05-24T23:44:55+00:00",
+            "collected_at": "2026-11-18T20:38:35.212035+00:00"
+        },
+        {
+            "id": "1074386",
+            "profession": "Java Developer",
+            "title": "Web приложение на Java + Javascript",
+            "text": "Стоит задача написать web приложение на Java (backend) и html+css+javascript(frontend). Java более мение знаю (серверная часть с обращением к главной html страницы написаны и работают) проблема в основном в JS, в данный момент читаю книжку, но там ни слова о том, как подружить js с java. Во условию задания использовать только js и java без фреймворков типа springboot. Подсобите с литературой, что лучше читать, примеры с подобной задачей и подробным пояснением были бы кстати. А то все, на что я наталкивался, это написание java web-приложения с использованием jsp страниц.",
+            "questions": [
+                "Web приложение на Java + Javascript"
+            ],
+            "answers": [
+                {
+                    "text": "как подружить js с java Им не нужно дружить важно понять как работает приложение Представить что сайт должен отобразить пост(название, контент и автора)\nТы посылаешь(вбиваешь адрес в поисковике) запрос на свой java сервер и тогда есть варианты: Подход 1 : java берет данные из бд о посте(исходя из запроса) и составляет html документ вставляя эти данные( jsp ) и возвращает клиенту. Подход 2 : сервер возвращает html документ, javascript - начинает работу и посылает  запрос серверу на получение данных - сервер их возвращает и javascript уже составляет html .( SPA ) ПС: в обоих случаях сервер возвращает не только html но и js и css и тд. Или же они подтягиваются с сервера потом уже на клиенте отдельными запросами.(для тебя это может быть неявно) серверная часть с обращением к главной html страницы написаны и\n  работают не знаю какая задача, но добавь на эту страницу кнопку, привяжи к ней обработчик нажатия  js. и в нем пошли любой запрос на свой сервер - вот как дружат/взаимодействуют java и js/ сервер и клиент. Пример: <html>\n<head>\n</head>\n<body>\n    <button id=\"btn\"></button>\n    <script>\n        var btn = document.getElementById('btn');\n        btn.onclick = function () {\n           // Get получить с сервера порцию данных\n        }\n    </script>\n</body>\n\n</html> В любом случае нужно помнить задачи: сервер(java):управляет ответами на запрос и манипулирует данными на стороне сервера. клиент(js): взаимодействует с пользователем о тправляет запросы и обрабатывает ответы сервера PS",
+                    "score": 2,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "javascript",
+                "java",
+                "веб-программирование"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1074386/web-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bd%d0%b0-java-javascript",
+            "source": "stackoverflow_ru",
+            "published_at": "2020-01-25T19:02:05+00:00",
+            "collected_at": "2026-11-18T20:38:35.212328+00:00"
+        },
+        {
+            "id": "762446",
+            "profession": "Java Developer",
+            "title": "Backend под Linux",
+            "text": "Доброе время суток. Решили с другом начать изучать Веб. Он взял на себя frontend, я выбрал backend. В качестве ОС - Ubuntu Server 16.04.3. Вообще мало знакомы с Вебом. Подскажите, пожалуйста, какой язык лучше выбрать: Java или C# (на шарпе полтора года практики (WF, Unity3D), с Java недавно начал знакомиться (Minecraft Modding)) и какие особенности (трудности) с написанием под Linux (всю свою жизнь на Окнах сижу). По возможности можете порекомендовать гайды/туториалы/книги. Заранее спасибо.",
+            "questions": [
+                "Backend под Linux"
+            ],
+            "answers": [
+                {
+                    "text": "На чет писать это уже решать вам решать, если знаком c#. Можно писать веб сервисы на Asp.net core. Я бы сначала начал изучать веб, чем выбирать, так глобально.",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java",
+                "c#",
+                "linux",
+                "backend"
+            ],
+            "score": 2,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/762446/backend-%d0%bf%d0%be%d0%b4-linux",
+            "source": "stackoverflow_ru",
+            "published_at": "2017-12-23T18:43:17+00:00",
+            "collected_at": "2026-11-18T20:38:35.212704+00:00"
+        },
+        {
+            "id": "813135",
+            "profession": "Java Developer",
+            "title": "Выбор backend-сервер технологий для mobile social app",
+            "text": "Прошу совета вот по какому вопросу.\nСейчас находится в зачаточном состоянии мобильный проект. Сам я Джавист с крайне небольшим опытом работы. Пока стартап будет писаться самим на коленках, а если выстрелит, то будет нанята команда программистов-бодибилдеров. Вопрос. Какую схему и технологию использовать для backend мобильного приложения? Мне в голову приходит только Java + Spring + REST + MongoBD + JSON. Будет ли на перспективу такая схема держать высокую нагрузку множественных коннектов и запросов. Сейчас это будет 5 запросов в час, а на перспективу может быть и 1000 запросов в секунду. Требования. backend желательно на java, т.к. я сам буду писать поначалу. Специфика проекта - \"инстаграм для трёх калек\". Поэтому не реляционная MongoDB Клиенты будут цепляться по android (сам буду писать) и iOS на аутсерсе заказывать. Насколько оправдана схема Java + Spring + REST + MongoBD + JSON вообще? Как работают социальные мессенджеры и сети в микромасштабе? По JSON over HTTP? Так никто ничего и не может сказать. \nЯ тут прошерстил инфу. \nЧто лучше держит нагрузки на backend при множественных подключениях? Spring REST или websocket ?",
+            "questions": [
+                "Выбор backend-сервер технологий для mobile social app"
+            ],
+            "answers": [
+                {
+                    "text": "Хочешь Rest (т.е. одноразовые запросы): Node js -  Ассинхронность, хорошее масштабирование, не требует типизированного кода (хотя типизация на некотором лвл'е присутствует)\nПри 10к соединений -  ответ в 170+ мс php, а конкретнее посоветовал бы Symfony 4+ и FOS Rest к нему в придачу\nRest писать изумительно удобно, начиная с 4 версии симфонии 80% кода можно написать при помощи комментариев, много функций для генерации интерфейсов  к таблицам БД (моделей), генерации самих таблиц и прочего Хочешь реалтайм соединения, тогда websoket - выбирай в порядке возрастания из node.js, Java, C (любой из семейства) А теперь конкретно по вашей задаче:\nСейчас мессенджеры пишутся несколькими способами Pooling - асинхронный  запросы на Rest, по приходу ответа которого, посылается новый. Таким образом идёт вечный опрос новых сообщений и инфы от друзей и подписчиков и т.п. Замена http запросов (пулинга) на коннект (websoket) - смысл тот же, только вместо того чтобы вечно опрашивать сервер на наличие новой инфы (а серверу собственно каждый раз подготавливать ответ и отвечать), создаётся единоразовый коннект и сервер сам отправляет новые данные, если таковы есть.\nНагрузки вычислений на сервере падают, но вот нагрузка памяти увеличивается, т.к. соединение для каждого клиента надо держать открытым. Это что касается мессенджера, отдельно должен быть обычный Rest, для статических запросов не требующих поддержки соединения (логин, регистрация, получение инфы, списка друзей, групп и прочих вещей)",
+                    "score": 2,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java",
+                "json",
+                "spring",
+                "rest",
+                "backend"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/813135/%d0%92%d1%8b%d0%b1%d0%be%d1%80-backend-%d1%81%d0%b5%d1%80%d0%b2%d0%b5%d1%80-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d0%b9-%d0%b4%d0%bb%d1%8f-mobile-social-app",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-04-12T09:16:13+00:00",
+            "collected_at": "2026-11-18T20:38:35.215022+00:00"
+        },
+        {
+            "id": "1623887",
+            "profession": "Java Developer",
+            "title": "Как правильно возвращать результат операции (успех/ошибка) в Java-методе без вывода в консоль?",
+            "text": "Я пишу backend приложение на Java и хочу, чтобы методы явно сообщали о результате своей работы. При этом не хочу использовать System.out.println(), так как, думаю,что это не подходит для реальных проектов. Я хочу этот результат выдавать пользователю, чтобы было ясно успешная операция или нет. Пример метода: @Override\n    public OperationResult addProductToSystem(Product product) {\n        if (product == null) {\n            throw new NullPassedException(\"Было передано неверное значение!\");\n        }\n\n        if (product.getArticle() <= article) {\n            product.setArticle(generatorArticle());\n        }\n\n        if (products.containsKey(product.getArticle())) {\n            return new OperationResult(false, \"Данный товар уже находиться в системе!\");\n        }\n\n        products.put(product.getArticle(), new Product(product));\n        return new OperationResult(true, \"Товар успешно добавлен в систему!\");\n    } Cоздал record: public record OperationResult(boolean success, String message) {} Но не уверен, насколько это соответствует реальным Java-проектам. p.s. я только изучаю backend на java, но хочется писать, чтобы было похоже на реальный проект",
+            "questions": [
+                "Как правильно возвращать результат операции (успех/ошибка) в Java-методе без вывода в консоль?"
+            ],
+            "answers": [
+                {
+                    "text": "Формат общения клиент-сервер (frontend + backend) подразумевает, что в общении участвует две стороны. Между ними установлены правила поведения, часто это существующие спецификации и договоренности. В случае консольного приложения двух сторон общения с правилами нет, хотя их можно имитировать искусственно самому. Пока вы пишите консольные приложения, на этом этапе важно освоить основы языка и сконцентрироваться на этом, самоограничения тут излишни и только будут мешать . Я бы советовал отложить этот вопрос, пока не дойдете до полноценного бекэнда, там научат как это делать правильно и естественным путем. Но если есть вопрос, то должен быть и ответ почему так. Посмотрим на нормальный бекэнд Возьмем простое приложение Spring, оно будет состоять из кода @RestController\npublic class MyController {\n    public record Result<T>(String message, T entity) {}\n\n    @RequestMapping(\"/test\")\n    public ResponseEntity<Result<String>> test(@RequestParam(value = \"ok\") boolean ok) {\n        if (ok)\n            return ResponseEntity.ok(new Result<>(null, \"OK\"));\n        else\n            return ResponseEntity\n                    .status(HttpStatus.NOT_FOUND)\n                    .body(new Result<>(\"Ошибка\", null));\n    }\n} Больше в нем ничего добавленного нет, это весь его добавленный вручную код. Клиент будет ориентироваться на коды статуса HTTP и объект Result. 200 - OK, запрос прошел без ошибок 404 - NOT_FOUND, запрос вернул ошибку Есть и другие статусные коды, можно возвращать как упомянутое ",
+                    "score": 5,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "java"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1623887/%d0%9a%d0%b0%d0%ba-%d0%bf%d1%80%d0%b0%d0%b2%d0%b8%d0%bb%d1%8c%d0%bd%d0%be-%d0%b2%d0%be%d0%b7%d0%b2%d1%80%d0%b0%d1%89%d0%b0%d1%82%d1%8c-%d1%80%d0%b5%d0%b7%d1%83%d0%bb%d1%8c%d1%82%d0%b0%d1%82-%d0%be%d0%bf%d0%b5%d1%80%d0%b0%d1%86%d0%b8%d0%b8-%d1%83%d1%81%d0%bf%d0%b5%d1%85-%d0%be%d1%88%d0%b8%d0%b1%d0%ba%d0%b0-%d0%b2-java-%d0%bc%d0%b5%d1%82%d0%be%d0%b4%d0%b5-%d0%b1%d0%b5%d0%b7-%d0%b2%d1%8b%d0%b2",
+            "source": "stackoverflow_ru",
+            "published_at": "2026-01-17T10:32:09+00:00",
+            "collected_at": "2026-11-18T20:38:35.216529+00:00"
+        },
+        {
+            "id": "1513933",
+            "profession": "Java Developer",
+            "title": "Обработка Multipart Request с пустым полем на backend java Spring",
+            "text": "Есть контроллер и эндпойнт обрабатывающие POST-запрос, в котором приходит XML-файл и др. параметры: @RestController\n@ResponseBody\n@RequestMapping(\"/label-integrity\")\n@RequiredArgsConstructor\npublic class LabelIntegrityController {\n\n    private final IntegrityLabelService integrityLabelService;\n\n    @PostMapping(value = \"/verify-double\", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})\n    @Secured(\"ROLE_rPageMain\")\n    public LabelResultTypeDto getVerifyDoubleLabelIntegrity(@RequestParam(\"file\") MultipartFile file, SuvLogFilterDto suvLogFilterDto) {\n        return this.integrityLabelService.verifyDoubleLabelIntegrity(suvLogFilterDto, file);\n    }\n} С фронта запрос отправляется следующим образом: public getVerifyDoubleLabelIntegrity(id: string, messageGuid: string, eventCode: Array<string>, typeMessage: string, destination: string, file?: FormData) {\n    const url = `${this._url}/verify-double`;\n\n    return this.http\n      .post<VerifyLabelIntegrityResponseModel>(url, file, { params: { id, messageGuid, eventCode, typeMessage, destination } })\n      .pipe(\n        tap(_ => this.logger.debug(`post VerifyDoubleLabelIntegrity`)),\n        take(1),\n        share()\n      );\n  } Объект \"file\" может быть заполнен - XML-файл, а может быть undefined . Когда объект \"file\" заполнен, то всё нормально, но когда он не заполнен (данный кейс необходим), то возникает ошибка: org.springframework.web.HttpMediaTypeNotSupportedException: Content\ntype '' not supported Пробовал создавать пустой объект и отправлять его на бэк: if (file === null || file === undefined) {\n      file = new FormData();\n    } Но это вызывает другую ошибку: org.springframework.web.multipart.support.MissingServletRequestPartException:\nRequired request part 'file' is not present Пробовал в описание эндпойнта добавить MediaType.ALL_VALUE: @PostMapping(value = \"/verify-double\", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.ALL_VALUE}) Но это тоже вызвало уже другую ошибку. Пробовал в аннотации параметра ",
+            "questions": [
+                "Обработка Multipart Request с пустым полем на backend java Spring"
+            ],
+            "answers": [
+                {
+                    "text": "Замени @RequestParam на  @RequestPart\nИ там уже можно будет использовать (required = false)\nВот пример:\npublic LabelResultTypeDto getVerifyDoubleLabelIntegrity(@RequestPart(required = false) MultipartFile file, SuvLogFilterDto suvLogFilterDto)",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "java",
+                "spring",
+                "spring-mvc",
+                "angular2",
+                "java-ee"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1513933/%d0%9e%d0%b1%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-multipart-request-%d1%81-%d0%bf%d1%83%d1%81%d1%82%d1%8b%d0%bc-%d0%bf%d0%be%d0%bb%d0%b5%d0%bc-%d0%bd%d0%b0-backend-java-spring",
+            "source": "stackoverflow_ru",
+            "published_at": "2023-04-17T12:53:48+00:00",
+            "collected_at": "2026-11-18T20:38:35.221510+00:00"
+        },
+        {
+            "id": "1089697",
+            "profession": "Java Developer",
+            "title": "Не получается склеить frontend и backend",
+            "text": "Пишу desktop приложение, где frontend написан на HTML + CSS +(немножко) JS с использованием фреймворка Electron . backend пишется на Java : сервлет принимает данные обрабатывает их и отсылает назад на форму.\nС Java работаю в Eclipse , поставил Tomcat . Проблема в следующем : Я не могу, грубо говоря, склеить это, не понимаю как сделать так, чтобы по кнопочке данные уходили на мой сервлет и не могу найти инфу чтобы почитать и разобраться, какие технологии и как их нужно использовать и тд. Очень буду рад любой помощи, совету и малейшей ниточке, ведущей к знаниям!)",
+            "questions": [
+                "Не получается склеить frontend и backend"
+            ],
+            "answers": [],
+            "tags": [
+                "html",
+                "java-ee",
+                "servlet",
+                "tomcat",
+                "electron"
+            ],
+            "score": 2,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1089697/%d0%9d%d0%b5-%d0%bf%d0%be%d0%bb%d1%83%d1%87%d0%b0%d0%b5%d1%82%d1%81%d1%8f-%d1%81%d0%ba%d0%bb%d0%b5%d0%b8%d1%82%d1%8c-frontend-%d0%b8-backend",
+            "source": "stackoverflow_ru",
+            "published_at": "2020-03-02T10:50:18+00:00",
+            "collected_at": "2026-11-18T20:38:35.222514+00:00"
+        },
+        {
+            "id": "695200",
+            "profession": "Data Analyst",
+            "title": "Анализ записей таблицы и очистка от невалидных данных",
+            "text": "Доброго времени суток Есть следующая таблица: --\n-- Структура таблицы `data`\n--\n\nCREATE TABLE IF NOT EXISTS `data` (\n  `id` int(11) NOT NULL AUTO_INCREMENT, /* ID записи */\n  `station_id` int(11) NOT NULL,        /* ID измерительной станции */\n  `box_id` int(11) NOT NULL,            /* ID измерительного блока на станции */\n  `param_id` int(11) NOT NULL,          /* Код измеренного параметра */\n  `value` int(11) NOT NULL,             /* Значение измеренного параметра */\n  `tm` bigint(20) NOT NULL,             /* Метка времени, когда был получен измеренный параметр */\n  PRIMARY KEY (`id`)\n) ENGINE=MyISAM  DEFAULT CHARSET=utf8; Если кратко, то таблица хранит измерения неких параметров (целые числа value ) для нескольких станций station_id измерения параметров. Внутри станции может быть несколько измерительных блоков box_id , и параметры они меряют тоже разные - param_id . Про получении данных записывается время в tm . Записи могут быть примерно вот такими: id     station_id box_id param_id value tm\n906616 2          1      5        2100  1500270962\n906616 2          2      2        2199  1500270960\n906616 2          3      3        2850  1500270960 Ну и подобный числовой хаос, который без поллитры не понятен. Тем не менее каждая запись важна, и по ним строятся всякие графики, отчеты и прочий анализ. Количество записей в таблице порядка 2-3 миллионов и возрастает. Записи годичной давности вынимаются из этой таблицы и перекладываются в архивные таблицы по ежемесячному cron. К сути. Измерительное оборудование сгорело. Несколько станций записали в нескольких своих блоках вместо нормальных измерений нули и единицы (а возможно, и что-то еще нехорошее, но никак не похожее на нормальные измерения). Задача: найти невалидные данные и уничтожить (удалить из таблицы), при этом не задев валидные данные. Для тех параметров, которые выдают случайные с точки зрения человека данные, это невозможно - тут ничего не попишешь. Но есть параметры, которые имеют определенный закон - проще гов",
+            "questions": [
+                "Анализ записей таблицы и очистка от невалидных данных"
+            ],
+            "answers": [
+                {
+                    "text": "Решение в лоб: SELECT t1.id \nFROM data t1 JOIN data t2 \nON (t1.tm<t2.tm AND t1.value>t2.value) \nWHERE t1.station_id = 1 AND t1.box_id = 1 AND t1.param_id = 1 AND t2.station_id = 1 AND t2.box_id = 1 AND t2.param_id = 1;",
+                    "score": 0,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "mysql",
+                "sql"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/695200/%d0%90%d0%bd%d0%b0%d0%bb%d0%b8%d0%b7-%d0%b7%d0%b0%d0%bf%d0%b8%d1%81%d0%b5%d0%b9-%d1%82%d0%b0%d0%b1%d0%bb%d0%b8%d1%86%d1%8b-%d0%b8-%d0%be%d1%87%d0%b8%d1%81%d1%82%d0%ba%d0%b0-%d0%be%d1%82-%d0%bd%d0%b5%d0%b2%d0%b0%d0%bb%d0%b8%d0%b4%d0%bd%d1%8b%d1%85-%d0%b4%d0%b0%d0%bd%d0%bd%d1%8b%d1%85",
+            "source": "stackoverflow_ru",
+            "published_at": "2017-07-21T15:57:38+00:00",
+            "collected_at": "2026-11-18T20:38:41.283579+00:00"
+        },
+        {
+            "id": "196178",
+            "profession": "Data Analyst",
+            "title": "Разработка настольного приложения для анализа данных",
+            "text": "Доброго времени суток.\nУ меня на работе начинается новый проект по разработке приложения для анализа статистических данных. Приложение будет работать с базой данных sql server. ОС Windows. Но есть нюанс... \nМое место работы - это государственное учреждение, где требуется работа с информацией, имеющей гриф секретности. Устанавливаться и использоваться ПО будет у нас.\nВсе бы ничего, но на рабочих машинах будущих пользователей будет установлено ПО Страж 3 и проведена аттестация рабочих мест на работу с секретными данными. Эта аттестация пройдет в ближайшее время, и как мне объяснили, после данного мероприятия изменять конфигурацию рабочих машин пользователей не будет возможным (показания, правда, расходятся - я спрашивал троих человек, и трое дали разные варианты ответов). \nСуть такая - после аттестации менять железо и ПО на машинах будет нельзя (это худший вариант ответа). \nИ тут возникает вопрос: а что лучше выбрать для разработки. Хочется устанавливать ПО пользователям с периодом в 2 недели, но там возникают трудности... для запуска java приложения необходимо дать права только на jre и потом не напрягать IT с просьбой установки или изменения паспорта компьютера и т.д. А вот для запуска wpf приложения потребуется каждый раз искать этих неуловимых товарищей и привлекать к обновлению ПО у пользователя на машине.\nЧто посоветуете выбрать java swing или wpf? Трудности я приблизительно постарался описать. Опыт есть с обоими платформами.",
+            "questions": [
+                "Разработка настольного приложения для анализа данных"
+            ],
+            "answers": [
+                {
+                    "text": "Из моего опыта -- Swing намного неудобнее, нелогичнее, медленнее и просто хуже WPF, что вопросов вообще никогда не возникало. Хотя на Swing'е в принципе можно создать нормально выглядящее приложение, по факту нативные виджеты выглядят в стиле Motif/CDE, layout manager отвратителен (некоторые свойства действуют в одном случае и не действуют в другом, простое выравнивание вправо/влево сопряжено с нетривиальными танцами с бубном), визуальный редактор производит код, глядя в который хочется плакать, нету XAML, binding'ов, стилей, анимации, кодировать приходится в стиле WinForms, 19 век, в общем. Кроме того, ваш опыт разработчика на WPF пригодятся на рынке труда существенно больше, чем опыт в Swing, всё же Java не снискала славы десктопного языка. Резюме: если есть возможность, выбирайте WPF. А вот для запуска wpf приложения потребуется каждый раз искать этих неуловимых товарищей и привлекать к обновлению ПО у пользователя на машине. Ы? Один раз устанавливаете .NET 4.5 и всё. Если вы говорите об обновлениях, то обновляются все -- и .NET, и Java, и эти обновления при необходимости вполне можно отключить на уровне групповых политик (спросите вашего админа, он знает лучше).",
+                    "score": 4,
+                    "is_accepted": false
+                },
+                {
+                    "text": "Если честно, не понял, почему с WPF сложней. Мне кажется, стоит выбрать WPF.",
+                    "score": 3,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "c#",
+                "wpf",
+                "java",
+                "swing"
+            ],
+            "score": 3,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/196178/%d0%a0%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%bd%d0%b0%d1%81%d1%82%d0%be%d0%bb%d1%8c%d0%bd%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f-%d0%b4%d0%bb%d1%8f-%d0%b0%d0%bd%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0-%d0%b4%d0%b0%d0%bd%d0%bd%d1%8b%d1%85",
+            "source": "stackoverflow_ru",
+            "published_at": "2013-02-24T11:34:30+00:00",
+            "collected_at": "2026-11-18T20:38:41.283694+00:00"
+        },
+        {
+            "id": "832205",
+            "profession": "Data Analyst",
+            "title": "Приложение с механизмом Web Application Firewall",
+            "text": "Всем доброго времени суток, нужно написать приложение для защиты Web приложений.\nПриложение должно: 1) Блокировать: SQL Injection — sql инъекции; Remote Code Execution (RCE) — удаленное выполнение кода; Cross Site Scripting (XSS) — межсайтовый скриптинг; Cross Site Request Forgery (CSRF) — межстайтовую подделку запросов; 2) Выявлять бот-активность 3) Не зависеть от платформы веб-приложения Уже разобрался в методе анализа данных и тд. Теперь вопрос: 1) нужна помощь в создании структуры программы (было бы совсем\nздорово если представлено в виде UML диаграмм) 2) нужна помощь в    проектировании базы данных, разумеется\nпроектировать не надо, просто    в общем виде какие таблицы должна\nсодержать база. Саму структуру.",
+            "questions": [
+                "Приложение с механизмом Web Application Firewall"
+            ],
+            "answers": [],
+            "tags": [
+                "база-данных",
+                "веб-программирование",
+                "uml",
+                "firewall"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/832205/%d0%9f%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d0%b5-%d1%81-%d0%bc%d0%b5%d1%85%d0%b0%d0%bd%d0%b8%d0%b7%d0%bc%d0%be%d0%bc-web-application-firewall",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-05-23T10:42:24+00:00",
+            "collected_at": "2026-11-18T20:38:41.284130+00:00"
+        },
+        {
+            "id": "885685",
+            "profession": "Data Analyst",
+            "title": "Как предотвратить повторный запуск задания в агенте?",
+            "text": "SQL Server 2014\nВ агенте создано задание, которое выполняется каждые 10 сек. Суть задания заключается в обработке данных, накопившихся после выполнения предыдущего задания. Задание написано на T-SQL. В зависимости от объёма данных задание не всегда успевает выполниться за 10 сек. Если до окончания выполнения задания запустить его ещё раз, то нарушается алгоритм обработки данных. \nВопрос: \nКак выяснить, выполнение задания завершено или ещё нет? Может в SQL Server 2014 есть какие-то средства для анализа завершения задания (переменные, например)?",
+            "questions": [
+                "Как предотвратить повторный запуск задания в агенте?"
+            ],
+            "answers": [
+                {
+                    "text": "Да, Denis Rubashkin прав - задание не запускается, пока не закончится предыдущее выполнение. Вопрос закрыт.",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "sql-server"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/885685/%d0%9a%d0%b0%d0%ba-%d0%bf%d1%80%d0%b5%d0%b4%d0%be%d1%82%d0%b2%d1%80%d0%b0%d1%82%d0%b8%d1%82%d1%8c-%d0%bf%d0%be%d0%b2%d1%82%d0%be%d1%80%d0%bd%d1%8b%d0%b9-%d0%b7%d0%b0%d0%bf%d1%83%d1%81%d0%ba-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-%d0%b2-%d0%b0%d0%b3%d0%b5%d0%bd%d1%82%d0%b5",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-09-26T08:01:23+00:00",
+            "collected_at": "2026-11-18T20:38:41.284229+00:00"
+        },
+        {
+            "id": "806618",
+            "profession": "Data Analyst",
+            "title": "Map-reduce для обработки телеметрии",
+            "text": "Можно ли использовать модель map-reduce для хранения и обработки данных телеметрии. \nС точки зрения обработки важна последовательность при анализе показаний. Как с этой проблемой справляются при распараллеливании вычислений? Будет ли от применения модели map-reduce польза? Интересно чем пользуются для сбора и анализа данных при разработке турбин или самолетов. Поясню. Имеем проект по сбору и аналитике телеметрии. На текущий момент данные для анализа хранятся в реляционной СУБД. \nИз плюсов: данные в одном месте удобно использовать большой набор инструментария по анализу (оконные функции SQL, группировки, сортировки) Что не устраивает: ограничения по масштабированию. Отсутствует возможность горизонтального масштабирования БД. Как по размеру хранилища так и по его производительности. обеспечение отказоустойчивости. Есть желание настроить распределенное хранилище. Смотрим в сторону hadoop. Из того что на текущий момент выяснили, основной бонус от использования map-reduce в возможности распаралелить обработку и в \"свертываемости\" результата. Пока что я не понимаю, как можно организовать reduce-шаг именно на телеметрических данных. Спасибо.",
+            "questions": [
+                "Map-reduce для обработки телеметрии"
+            ],
+            "answers": [],
+            "tags": [
+                "архитектура",
+                "map-reduce"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/806618/map-reduce-%d0%b4%d0%bb%d1%8f-%d0%be%d0%b1%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b8-%d1%82%d0%b5%d0%bb%d0%b5%d0%bc%d0%b5%d1%82%d1%80%d0%b8%d0%b8",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-03-29T13:52:21+00:00",
+            "collected_at": "2026-11-18T20:38:41.284635+00:00"
+        },
+        {
+            "id": "1609978",
+            "profession": "Data Analyst",
+            "title": "SQL запрос с преобразованием данных для Sankey диаграммы",
+            "text": "Прошу помочь с решением задачи. По SQL запросу из Grafana в Postgres получаю следующие тестовые данные (уже отсортированы по времени) s_id |p_value|\nid_1 |val_1  |\nid_1 |val_2  |\nid_2 |val_1  |\nid_3 |val_1  |\nid_3 |val_2  |\nid_3 |val_3  |\nid_3 |val_4  | Требуется преобразовать эти данные для диаграммы Sankey, получив три столбца - \"scr\", \"dst\", \"count\". Т.е. сначала в рамках уникального id получить точки перехода и потом просуммировать уникальные пары. Например, для id_1 есть два значения. Получается одна пара: val_1, val_2 для id_2 всего одно значение. Тут получить пару val_1, 'Заглушка' для id_3 четыре значения. Тут получить пары val_1, val_2 val_2, val_3 val_3, val_4 (получается у каждого последующего значения в качестве входа предыдущее значение) И далее эти уникальные пары просуммировать и получить их количество. Можно ли это сделать в рамках SQL запроса более сложного, или эффективнее будет адаптировать данные внутри Grafana? Исходный запрос был такой: select s_id, p_value from params where param_name = 'Project' and (changed >= '2025-04-01' and changed <= '2025-04-05') order by changed; UPDATE\nНичего умнее на моем уровне понимания SQL не придумал, но код ниже работает. В любом случае буду рад совету по оптимизации запроса, тут совсем нет анализа глубины переходов в массиве и тп with\nallProjectsCalls as (\nselect s_id, array_agg(p_value order by changed) as projects\nfrom params\nwhere param_name = 'ProjectId' and changed >= '2025-04-02 00:00:00.000' and changed <= '2025-04-02 23:59:59.999'\ngroup by s_id\n),\narrayUpper as (\nselect session_id, array_upper(projects, 1) as arrayUpper, projects\nfrom allProjectsCalls -- Это задел на анализ глубины массива\n),\npair as (\nselect unnest(projects[1:1]) as src, unnest(projects[2:2]) as dst from arrayUpper\nunion all\nselect unnest(projects[2:2]) as src, unnest(projects[3:3]) as dst from arrayUpper\nunion all\nselect unnest(projects[3:3]) as src, unnest(projects[4:4]) as dst from arrayUpper\nunion all\nselect unnest(projects[4:4]) a",
+            "questions": [
+                "SQL запрос с преобразованием данных для Sankey диаграммы"
+            ],
+            "answers": [],
+            "tags": [
+                "postgresql",
+                "grafana"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1609978/sql-%d0%b7%d0%b0%d0%bf%d1%80%d0%be%d1%81-%d1%81-%d0%bf%d1%80%d0%b5%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5%d0%bc-%d0%b4%d0%b0%d0%bd%d0%bd%d1%8b%d1%85-%d0%b4%d0%bb%d1%8f-sankey-%d0%b4%d0%b8%d0%b0%d0%b3%d1%80%d0%b0%d0%bc%d0%bc%d1%8b",
+            "source": "stackoverflow_ru",
+            "published_at": "2025-04-06T12:58:23+00:00",
+            "collected_at": "2026-11-18T20:38:41.285034+00:00"
+        },
+        {
+            "id": "154247",
+            "profession": "Data Analyst",
+            "title": "Разделение дней недели",
+            "text": "Имеется некий параметр, который анализируется ежедневно в обязательном порядке. Значение параметра в будние дни составляет порядка 70-100 единиц, в выходные - может упасть до нуля. Вопрос в том, как реализовать на pl/sql алгоритм, который давал нам возможность оценки среднего значения параметра без учета выходных дней (в идеале, еще и других красных дней календаря) за неделю, месяц, год, произвольное время. Можно ли реализовать это функцией DAYOFYEAR( date) , как я понимаю, все субботы и воскресения будут  кратны 7 и 8 для 2012 года? Или функцией %w номер дня недели (0 - это воскресенье) для анализа данных за неделю?",
+            "questions": [
+                "Разделение дней недели"
+            ],
+            "answers": [
+                {
+                    "text": "Проще смотреть на номер дня недели: DAYOFWEEK",
+                    "score": 3,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "plsql",
+                "дата",
+                "sql"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/154247/%d0%a0%d0%b0%d0%b7%d0%b4%d0%b5%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b4%d0%bd%d0%b5%d0%b9-%d0%bd%d0%b5%d0%b4%d0%b5%d0%bb%d0%b8",
+            "source": "stackoverflow_ru",
+            "published_at": "2012-10-17T05:16:14+00:00",
+            "collected_at": "2026-11-18T20:38:41.285206+00:00"
+        },
+        {
+            "id": "1115874",
+            "profession": "Data Analyst",
+            "title": "Как предоставить общий доступ к данным сервера другим компьютерам сети?",
+            "text": "Я хочу создать удобную инфраструктуру для студентов. В нашем классе есть один сервер сервером и дюжиной компьютеров для студентов. Сервер содержит данные для анализа. Данные хранятся в PostgreSQL (изначально это набор больших файлов json). Я хочу предоставить студентам доступ только для чтения к данным на сервере прямо из их ноутбуков Jupyter. Это означает, что я хочу, чтобы учащиеся могли загружать данные в pandas.DataFrame на своих локальных ПК из базы данных на сервере. Как сделать это наиболее эффективным и простым способом? Моя текущая идея состоит в том, чтобы создать пользователя в Postgres с разрешением только для чтения и разрешить учащимся подключаться и запускать sql удаленно .",
+            "questions": [
+                "Как предоставить общий доступ к данным сервера другим компьютерам сети?"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "postgresql",
+                "pandas",
+                "jupyter-notebook",
+                "анализ-данных"
+            ],
+            "score": 1,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1115874/%d0%9a%d0%b0%d0%ba-%d0%bf%d1%80%d0%b5%d0%b4%d0%be%d1%81%d1%82%d0%b0%d0%b2%d0%b8%d1%82%d1%8c-%d0%be%d0%b1%d1%89%d0%b8%d0%b9-%d0%b4%d0%be%d1%81%d1%82%d1%83%d0%bf-%d0%ba-%d0%b4%d0%b0%d0%bd%d0%bd%d1%8b%d0%bc-%d1%81%d0%b5%d1%80%d0%b2%d0%b5%d1%80%d0%b0-%d0%b4%d1%80%d1%83%d0%b3%d0%b8%d0%bc-%d0%ba%d0%be%d0%bc%d0%bf%d1%8c%d1%8e%d1%82%d0%b5%d1%80%d0%b0%d0%bc-%d1%81%d0%b5%d1%82%d0%b8",
+            "source": "stackoverflow_ru",
+            "published_at": "2020-04-26T05:30:25+00:00",
+            "collected_at": "2026-11-18T20:38:41.285441+00:00"
+        },
+        {
+            "id": "414760",
+            "profession": "Data Analyst",
+            "title": "Подобрать ОС для SQL Server",
+            "text": "Уважаемые коллеги помогите с не легким выбором. Мы у нас в регионе хотим создать единую базу данных для сбора и анализа статистических данных по образовательным организациям, а именно по школа. Школ в регионе всего 450 , общее количество детей 220 000 . Сервер мы приобрели. Он у нас в виде шасси на котором четыре таких блэйд-сервера: СУБД – SQL Server и будет установлен на одном таком блэйд-сервере (т.е. без каких либо виртуальных делений). Правда мы еще не определились какой редакцией она будет. Больше склоняюсь как минимум должна быть SQL Server Standard . Самый трудный выбор и о чем я хочу спросить, какая операционная система нам нужна – на чем так сказать «крутить» SQL Server? Windows Server или подойдет обычная клиентская ОС? Нужно чтобы выдерживалось подключения одновременно 500 клиентов к SQL Server для вноса статистики. Вычислений не будут. Если и будут, то одновременно у 40-50 клиентов с перебором около 1000 записей . Трудность в том, что в бюджете сейчас денег нет. Мы за сервер отдали всего 200 000 р. А по моим подсчетам, чтобы приобрести только SQL Server на такой блэйд-сервер выходит в пределах 600 000 рублей . Нужен оптимальный вариант. Но если встанет вопрос: «брать самый лучший или вообще не брать». То проект надо отложить до финансирования. И еще раз вопрос: Нужен ли мне Windows Server для моей базы? И если да, то конкретно какие преимущества он несет? И какой редакции Windows Server приобретать? Если там «замахиваться» на Windows Server Datacenter , то он тоже в «копеечку» выйдет.",
+            "questions": [
+                "Подобрать ОС для SQL Server"
+            ],
+            "answers": [
+                {
+                    "text": "Попробуйте обратится в Microsoft, у них действует специальная программа для школ: Специальные условия лицензирования ПО для учреждений начального и среднего образования на 2015 год В связи с окончанием 31 декабря 2014 года срока действия действующих Соглашений по программе School Agreement («Первая помощь») на право использования программного обеспечения Microsoft учреждениями системы начального и среднего образования РФ, а также органами управления образования регионального и муниципального уровня, Microsoft объявляет о новых специальных условиях на период с 1 января 2015 по 31 декабря 2015 года. Специальное предложение базируется на программе School Agreement, которая обеспечивает лицензирование всего парка ПК образовательного учреждения. В рамках специального предложения предлагается базовый пакет, а также набор продуктов, лицензии на которые могут быть приобретены дополнительно. По правилам программы School Agreement минимальный объем заказываемых лицензий составляет 50 баллов, что соответствует заказу 13 базовых пакетов. Базовый пакет должен быть приобретен на каждый ПК учреждения. Следует иметь в виду, что в рамках данной программы лицензирования не предоставляется возможность приобретения полной версии операционной системы Windows. Доступна только Upgrade-версия Windows, для использования которой необходимо наличие базовой лицензии: OEM-версии или Get Genuine Windows® Agreement for Academic (GGWA-A). Воспользоваться настоящим специальным предложением могут следующие ви",
+                    "score": 4,
+                    "is_accepted": false
+                },
+                {
+                    "text": "Вопрос в том, что подразумевается под \"одновременно\"? 40-50 человек будут вносить данные действительно одновременно - осуществлять запись пачки данных в одну и ту же секунду? Это явно завышенная оценка. Количество пользователей и детей ничего не говорит о предполагаемой нагрузке. Нужно оценивать количество одновременно выполняемых запросов. Например \"40-50 клиентов с перебором около 1000 записей\" - 1000 записей SQL Server перебирает за пару десятков миллисекунд (в худшем случае). Чтобы получить 40 одновременных выборок, вам нужна нагрузка в 4000 запросов в секунду. Это 240 000 в минуту. Т.е. для этого вам придется усадить за комп всех учеников ваших школ, и заставить каждого раз в минуту нажимать кнопку \"обновить\". Как вы собираетесь организовать доступ из разных школ? Они будут подключаться напрямую к SQL Server (судя по предполагаемым 500 соединений)? Если да - то это очень плохая идея. SQL Server надо прятать за Web-сервисом. Иначе малолетний хакер из одной из 500 школ затрет вам половину базы, и вы даже не сможете найти кто это сделал :) Если прямого подключения не планируется - то откуда предполагаемое требование в 500 соединений? Хостить SQL Server на своем железе дорого. Хостить его с хоть каким-то дублированием и отказоустойчивостью - ОЧЕНЬ ДОРОГО . Если у вас нет сверхстрогих требований к скорости работы, и 50 - это количество пользователей, а не одновременно выполняемых операций - лучше использовать SQL Azure . Цены там от 1500 руб в месяц за Standard S1 - должно хв",
+                    "score": 4,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "база-данных",
+                "sql-server",
+                "windows-server"
+            ],
+            "score": 3,
+            "answer_count": 3,
+            "url": "https://ru.stackoverflow.com/questions/414760/%d0%9f%d0%be%d0%b4%d0%be%d0%b1%d1%80%d0%b0%d1%82%d1%8c-%d0%9e%d0%a1-%d0%b4%d0%bb%d1%8f-sql-server",
+            "source": "stackoverflow_ru",
+            "published_at": "2015-04-08T06:22:19+00:00",
+            "collected_at": "2026-11-18T20:38:41.285976+00:00"
+        },
+        {
+            "id": "1084611",
+            "profession": "Data Analyst",
+            "title": "Как найти и обратиться к объекту БД Домен / DOMAIN?",
+            "text": "Очень мало информации нашел о таких объектах как \"домены\". Я знаю, что это примерно ( маш. перевод: What is domain type in SQL? ): Доменом является определенный пользователем, названный набор значений.\n  Когда вы объявляете столбцы в таблице SQL или параметры для хранимой процедуры, вы можете использовать домен вместо встроенного типа данных SQL, а затем этот столбец или параметр ограничивается значениями, которые удовлетворяют домену. Занимаясь сейчас анализом спецификаций к системе, встречаю в ней часто объявление доменов. Но по факту, в базе я не вижу их как объекты, либо упоминания в коде.",
+            "questions": [
+                "Как найти и обратиться к объекту БД Домен / DOMAIN?"
+            ],
+            "answers": [
+                {
+                    "text": "Начнём с термина Домен ( domain ) в контексте БД , цитирую: Домен в реляционной модели данных — тип данных, то есть множество допустимых значений. Этот термин относится более к этапу анализа и дизайна логической модели БД. В стандарте SQL-92 появилась возможность создать домен предложением CREATE DOMAIN .\nНо это предложение реализовано только в некоторых СУБД, например, PostgreSQL . В СУБД Oracle предложение CREATE DOMAIN отсутствует, поэтому вместо термина домен , чаще в ходу термин -- ограничение ( constraint , contrained data type ). Самые часто используемые ограничения (например, по длине, набору символов) реализованны во встроенных типах данных Built-in Data Types . Как же реализуются заложеные в логической модели данных домены , например -- пол персоны, широко известный как МЖ. Набор данных для тех, кто всё хочет попробовать сам: insert into person values ('Маша', 'f');\ninsert into person values ('Паша', 'm');\ninsert into person values ('Саша', null);\ninsert into person values ('Мики', 'd'); Check Constraints create table person (\n    name varchar2 (32), gender char (1),\n    constraint chk_gender check (gender in ('f','m'))); В случае вставки недопустимого значения: ORA-02290: check constraint (DB.CHK_GENDER) violated Referential Integrity Constraint (Foreign Key) Несколько не в ногу со временем, но ранее широко практиковалось хранить допустимые значеия в отдельной таблице: create table gender (val char (1) primary key);\ninsert into gender select trim (column_value) fro",
+                    "score": 6,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "sql",
+                "база-данных",
+                "oracle",
+                "plsql"
+            ],
+            "score": 2,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1084611/%d0%9a%d0%b0%d0%ba-%d0%bd%d0%b0%d0%b9%d1%82%d0%b8-%d0%b8-%d0%be%d0%b1%d1%80%d0%b0%d1%82%d0%b8%d1%82%d1%8c%d1%81%d1%8f-%d0%ba-%d0%be%d0%b1%d1%8a%d0%b5%d0%ba%d1%82%d1%83-%d0%91%d0%94-%d0%94%d0%be%d0%bc%d0%b5%d0%bd-domain",
+            "source": "stackoverflow_ru",
+            "published_at": "2020-02-19T08:30:06+00:00",
+            "collected_at": "2026-11-18T20:38:41.286218+00:00"
+        },
+        {
+            "id": "858912",
+            "profession": "Data Analyst",
+            "title": "Python, pandas. Куда копать?",
+            "text": "Совсем недавно стал изучать Python и сейчас ломаю голову над одной задачей: Есть два dataframe: user    date/time\na   01.02.2018 \na   01.03.2018 \na   15.03.2018 \nb   01.02.2018   \nb   02.02.2018 и вторая таблица user    date/time\na   01.01.2018 \na   02.01.2018\na   02.02.2018 \na   01.03.2018 \na   14.03.2018  \nb   01.01.2018 Можно ли без использования циклов подсчитать, сколько строк во второй таблице лежат во временном диапазоне для каждого пользователя из первой таблицы? Т.е. например для user \"a\" подсчитать: Сколько строк во второй таблице, которые раньше 01.02.2018 , которые лежат между 01.02.2018 и 01.03.2018 , лежат между 01.03.2018 и 15.03.2018 позже 15.03.2018 . В итоге хочу получить примерно следующее: user    date/time      count_in_table2\na   before 01.02.2018  2\na   01.02.2018         1\na   01.03.2018         2\na   after 15.03.2018   0\nb   before 01.02.2018  1\nb   01.02.2018         0\nb   after 02.02.2018   0 Единственное, что я придумал, это использование циклов с кучей ветвлений и условий, но я пониаю, что это не решение. Хочется научиться использовать магию pandas.",
+            "questions": [
+                "Python, pandas. Куда копать?"
+            ],
+            "answers": [
+                {
+                    "text": "Попробуйте так: def my_cut(data, dates, **kwargs):\n    assert isinstance(data, pd.Series)\n    assert isinstance(dates, pd.Series)\n    dates = dates.sort_values()\n    bins = pd.to_datetime([pd.to_datetime('1900-01-01')] + dates.tolist()  + [pd.to_datetime('2200-01-01')])\n    dts = dates.dt.strftime('%Y-%m-%d').values\n    labels = ('<= ' + dts).tolist() + ['after ' + dts[0]]\n    return pd.cut(data, bins=bins, labels=labels, duplicates='drop',  **kwargs)\n\n(d2.groupby(['user',\n             d2.groupby('user')['date/time']\n               .apply(lambda g: my_cut(g, dates=d1.loc[d1.user==g.name, 'date/time']))\n            ], as_index=False)\n   .size()\n   .reset_index(name='count_in_table2')) результат: user      date/time  count_in_table2\n0    a  <= 2018-02-01                2\n1    a  <= 2018-03-01                2\n2    a  <= 2018-03-15                1\n3    b  <= 2018-02-01                1",
+                    "score": 1,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python",
+                "дата",
+                "pandas"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/858912/python-pandas-%d0%9a%d1%83%d0%b4%d0%b0-%d0%ba%d0%be%d0%bf%d0%b0%d1%82%d1%8c",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-07-22T18:04:27+00:00",
+            "collected_at": "2026-11-18T20:38:41.287321+00:00"
+        },
+        {
+            "id": "878248",
+            "profession": "Data Analyst",
+            "title": "Python pandas telebot",
+            "text": "Цель: Рассылать задачи для сотрудников с помощью бота телеграмм Вопросы: 1. При парсинге страницы excel, pandas не вытягивает все значение ячейки E2 добавляя лишь \"...\". Как можно парсить все содержимое ячеек для последующего вывода?? Как при отправке сообщения через телеграм бота, отправлять именно таблицу, а не строки?? Буду признателен за любой совет!",
+            "questions": [
+                "Python pandas telebot"
+            ],
+            "answers": [
+                {
+                    "text": "pd.read_excel() читает/парсит все данные. При преобразовании текстового столбца DataFrame в строку (для печати или при использовании str() или df.to_string() ) Pandas обрезает длинные строки. Максимальную длину строки (при преобразовании в строку) можно контролировать используя: pd.set_option('display.max_colwidth', 100) все доступные настройки: In [209]: pd.options.display.\n            pd.o…y.chop_threshold         pd.o…y.date_yearfirst         pd.options.display.html       pd.o…y.max_columns            pd.options.display.max_rows   pd.o…y.notebook_repr_html     pd.options.display.unicode\n            pd.o…y.colheader_justify      pd.options.display.encoding   pd.options.display.large_repr pd.o…y.max_colwidth           pd.o…y.max_seq_items          pd.o…y.pprint_nest_depth      pd.options.display.width\n            pd.o…y.column_space           pd.o…y.expand_frame_repr      pd.options.display.latex      pd.o…y.max_info_columns       pd.o…y.memory_usage           pd.options.display.precision\n            pd.o…y.date_dayfirst          pd.o…y.float_format           pd.o…y.max_categories         pd.o…y.max_info_rows          pd.o…y.multi_sparse           pd.o…y.show_dimensions",
+                    "score": 2,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "excel",
+                "pandas",
+                "dataframe",
+                "telegram"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/878248/python-pandas-telebot",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-09-06T12:47:33+00:00",
+            "collected_at": "2026-11-18T20:38:41.287779+00:00"
+        },
+        {
+            "id": "673378",
+            "profession": "Data Analyst",
+            "title": "Python, Pandas - перебор элементов с условием",
+            "text": "updated\nПривет! Помогите чайнику :) В процессе освоения Python и Pandas, столкнулся с проблемой применения к Series своей функции. \nПытаюсь сделать функцию, которая будет перебирать значения заранее заданного набора чисел в Series и, в случае соответствия одному из нескольких критериев, осуществлять операцию с числом и вносить его в новый Series, иначе переходить к следующему числу. Попытался на своем понимании построить следующую функцию, но она не работает (Jupyter просто уходит в бесконечные раздумия): def trail_stop(high, low, close):\n  for row in close:\n    i = -1\n    run = True  \n    high.s = high.shift(i)\n    low.s = low.shift(i)\n    trail = (close + 0.0002)\n    stop_loss = (close - 0.0002)\n    while run == True:\n      if high.s[0] > trail and low.s[0] < stop_loss:\n        stop_loss = trail\n        trail = trail + 0.0002\n        i = i - 1\n      elif low.s[0] > stop_loss:\n        return stop_loss\n        run = False\n      elif high.s[0] < trail and low.s[0] < stop_loss:\n        i = i - 1\n      else:\n        run = False\n\ntable['trail'] = table.apply(trail_stop(table.High, table.Low, table.Close), axis = 1) То есть при таких исходящих данных (столбцы Close, High, Low) нужно получить на выходе следующее (столбец trail): High      Low    Close    trail\n0    1.32396  1.32358  1.32391  1.32371\n1    1.32392  1.32365  1.32365  1.32385 \n2    1.32370  1.32364  1.32369  1.32389 \n3    1.32378  1.32365  1.32371  1.32391 \n4    1.32378  1.32360  1.32360  1.32380 \n5    1.32390  1.32366  1.32370  1.32390 \n6    1.32384  1.32370  1.32384  1.32364 \n7    1.32386  1.32355  1.32380  1.32360 \n8    1.32384  1.32358  1.32379  None\n9    1.32389  1.32379  1.32387  None \n10   1.32386  1.32379  1.32383  1.32363 \n11   1.32394  1.32360  1.32387  None \n12   1.32389  1.32370  1.32370  1.32390  \n13   1.32390  1.32370  1.32390  1.32370 \n14   1.32390  1.32364  1.32387  None  \n15   1.32382  1.32373  1.32382  None Буду рад любой помощи или совету куда копать. Спасибо",
+            "questions": [
+                "Python, Pandas - перебор элементов с условием"
+            ],
+            "answers": [
+                {
+                    "text": "Добрый день. 1) У вас объявление run == True стоит внутри цикла, и тем самым у вас цикл ходит по замкнутому кругу. Попробуйте вынести его в первую строчку функции, над циклом. 2) Не уверен, что верно понимаю всю задачу, но, в качестве другого варианта, попробуйте использовать if вместо while.",
+                    "score": 1,
+                    "is_accepted": false
+                },
+                {
+                    "text": "в вашем цикле есть ветвь if из которой вы никогда не выйдете, что и происходит при каких-то данных elif high.s[0] < trail and low.s[0] < stop_loss:\n    i = i - 1",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "pandas"
+            ],
+            "score": 3,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/673378/python-pandas-%d0%bf%d0%b5%d1%80%d0%b5%d0%b1%d0%be%d1%80-%d1%8d%d0%bb%d0%b5%d0%bc%d0%b5%d0%bd%d1%82%d0%be%d0%b2-%d1%81-%d1%83%d1%81%d0%bb%d0%be%d0%b2%d0%b8%d0%b5%d0%bc",
+            "source": "stackoverflow_ru",
+            "published_at": "2017-05-31T13:04:22+00:00",
+            "collected_at": "2026-11-18T20:38:41.288392+00:00"
+        },
+        {
+            "id": "944844",
+            "profession": "Data Analyst",
+            "title": "Python. Pandas вместо графика пишет координаты",
+            "text": "При построения графика Pandas выдаёт в консоле координаты а не сам график : AxesSubplot(0.125,0.11;0.775x0.77) у меня была такая проблема в matplotlib и она решилась тем что я установил matplotlib в папку Scripts. Проделал тоже самое с Pandas но ничего не изменилось. То что я делаю: import seaborn as sns\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\n#Удаляем пустые значения в таблице\ndf = df.dropna()\n\n#Задаём другой тип данных нужным признакам\ndf['User_Score'] = df.User_Score.astype('float64')\ndf['Year_of_Release'] = df.Year_of_Release.astype('int64')\ndf['User_Count'] = df.User_Count.astype('int64')\ndf['Critic_Count'] = df.Critic_Count.astype('int64')\n\n#берём те признаки которыми будем пользоваться\nuseful_cols = ['Name', 'Platform', 'Year_of_Release', 'Genre', \n               'Global_Sales', 'Critic_Score', 'Critic_Count',\n               'User_Score', 'User_Count', 'Rating'\n              ]\n\n#построим график продаж видео игр в различных странах в зависимости от года. \n#Для начала отфильтруем только нужные нам столбцы, затем посчитаем суммарные \n#продажи по годам и у получившегося DataFrame вызовем функцию plot без \n#параметров\n\nsales_df = df[[x for x in df.columns if 'Sales' in x] + ['Year_of_Release']]\nprint(sales_df.groupby('Year_of_Release').sum().plot()) В итоге получаю: AxesSubplot(0.125,0.11;0.775x0.77) а должен быть график Ссылка на файл CSV",
+            "questions": [
+                "Python. Pandas вместо графика пишет координаты"
+            ],
+            "answers": [],
+            "tags": [
+                "python",
+                "pandas"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/944844/python-pandas-%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%be-%d0%b3%d1%80%d0%b0%d1%84%d0%b8%d0%ba%d0%b0-%d0%bf%d0%b8%d1%88%d0%b5%d1%82-%d0%ba%d0%be%d0%be%d1%80%d0%b4%d0%b8%d0%bd%d0%b0%d1%82%d1%8b",
+            "source": "stackoverflow_ru",
+            "published_at": "2019-02-14T14:12:54+00:00",
+            "collected_at": "2026-11-18T20:38:41.288870+00:00"
+        },
+        {
+            "id": "1432766",
+            "profession": "Data Analyst",
+            "title": "python pandas колонки",
+            "text": "Есть такая таблица показатель fact2020 fact2021 fact2022 plan2023 a 143 24 124 324 b 234 1 324 6583 Хочу привести ее к следующему виду показатель признак год значение a fact 2020 143 a fact 2021 24 a fact 2022 124 a plan 2023 324 b fact 2020 234 b fact 2021 1 b fact 2022 324 b plan 2023 6583",
+            "questions": [
+                "python pandas колонки"
+            ],
+            "answers": [
+                {
+                    "text": "Можно сделать так: res = df.pivot(columns = \"показатель\", values = [\"fact2020\", \"fact2021\", \"fact2022\", \"plan2023\"]).T.reset_index()\nres['признак'] = res['level_0'].str[:-4]\nres['год'] = res['level_0'].str[-4:]\nres[\"значение\"] = res[0].fillna(res[1])\nres = res.drop(columns=[\"level_0\", 0, 1]).sort_values(\"показатель\") res: показатель признак   год  значение\n0          a    fact  2020     143.0\n2          a    fact  2021      24.0\n4          a    fact  2022     124.0\n6          a    plan  2023     324.0\n1          b    fact  2020     234.0\n3          b    fact  2021       1.0\n5          b    fact  2022     324.0\n7          b    plan  2023    6583.0",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "pandas"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1432766/python-pandas-%d0%ba%d0%be%d0%bb%d0%be%d0%bd%d0%ba%d0%b8",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-07-25T07:05:50+00:00",
+            "collected_at": "2026-11-18T20:38:41.291413+00:00"
+        },
+        {
+            "id": "866101",
+            "profession": "Data Analyst",
+            "title": "Вопрос по Pandas Dataframe в Python",
+            "text": "Только начал изучать Python. Возник вопрос по pandas DataFrame.\nСледующий код исполняется: data['Weight'][5] А вот такой ни в какую не исполняется: for i in range(5):\n    print(data['Weight'][i]) Ошибку выдает такую: Объясните новичку пожалуйста, почему так происходит?\nЗаранее спасибо.",
+            "questions": [
+                "Вопрос по Pandas Dataframe в Python"
+            ],
+            "answers": [
+                {
+                    "text": "Это значит, что в вашем DataFrame не существует строки с индексом 0 . Пример: In [35]: df\nOut[35]:\n    Weight\n5      100          # NOTE: индексирование начинается с 5\n6      101\n7      102\n8      103\n9      104\n10     105\n\nIn [36]: df['Weight'][5]\nOut[36]: 100\n\nIn [37]: df['Weight'][0]\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\n<ipython-input-37-1e19d5ad0ef3> in <module>()\n----> 1 df['Weight'][0]\n\n~\\AppData\\Local\\Continuum\\anaconda3\\envs\\ml\\lib\\site-packages\\pandas\\core\\series.py in __getitem__(self, key)\n    765         key = com._apply_if_callable(key, self)\n    766         try:\n--> 767             result = self.index.get_value(self, key)\n    768\n    769             if not is_scalar(result):\n\n~\\AppData\\Local\\Continuum\\anaconda3\\envs\\ml\\lib\\site-packages\\pandas\\core\\indexes\\base.py in get_value(self, series, key)\n   3116         try:\n   3117             return self._engine.get_value(s, k,\n-> 3118                                           tz=getattr(series.dtype, 'tz', None))\n   3119         except KeyError as e1:\n   3120             if len(self) > 0 and self.inferred_type in ['integer', 'boolean']:\n\npandas\\_libs\\index.pyx in pandas._libs.index.IndexEngine.get_value()\n\npandas\\_libs\\index.pyx in pandas._libs.index.IndexEngine.get_value()\n\npandas\\_libs\\index.pyx in pandas._libs.index.IndexEngine.get_loc()\n\npandas\\_libs\\hashtable_class_helper.pxi in pandas._libs.hashtabl",
+                    "score": 2,
+                    "is_accepted": false
+                },
+                {
+                    "text": "Элемент data['Weight'][5] у вас есть. Но в цикле вы хотите печатать элементы data['Weight'][0]\ndata['Weight'][1]\ndata['Weight'][2]\ndata['Weight'][3]\ndata['Weight'][4] и какой-то из них не существует.",
+                    "score": 1,
+                    "is_accepted": false
+                }
+            ],
+            "tags": [
+                "python",
+                "pandas",
+                "dataframe"
+            ],
+            "score": 2,
+            "answer_count": 2,
+            "url": "https://ru.stackoverflow.com/questions/866101/%d0%92%d0%be%d0%bf%d1%80%d0%be%d1%81-%d0%bf%d0%be-pandas-dataframe-%d0%b2-python",
+            "source": "stackoverflow_ru",
+            "published_at": "2018-08-08T15:09:13+00:00",
+            "collected_at": "2026-11-18T20:38:41.291955+00:00"
+        },
+        {
+            "id": "1293422",
+            "profession": "Data Analyst",
+            "title": "Python Pandas соединение двух dataframe",
+            "text": "Не так давно сижу над Pandas и конкретно три дня сижу над этой проблемой, просмотрел много интернета, пробовал соединять через merge,concat, менять типы данных в столбцах, использовать циклы для заполнения по ключу, но постоянно не получается.\nПервая таблица- res - данные с пропуском дат\nВторая таблица- df3 - это по сути столбец с полным набор дат от минимальной до максимальной из таблицы res. Задача подсоединить res (по столбцу Col1) к df3 (по столбцу Col00) чтобы получить в том числе строки с датой, но пустыми значениями в остальных столбцах- потому что в res нет строк с этими датами. Прилагаю изображение с информацией о таблицах и результате: Спасибо",
+            "questions": [
+                "Python Pandas соединение двух dataframe"
+            ],
+            "answers": [
+                {
+                    "text": "Примерно так, пишу навскидку, поскольку вы не предоставили примера данных, с которым можно было бы работать: res.merge(df3, how='right', left_on='Col1', right_on='Col00') Обратите внимание на тип джойна - right , это аналогично тому, как в SQL бы делалось в подобном случае. И у вас ещё Col1 типа object , возможно нужно будет его предварительно преобразовать в datetime : res['Col1'] = pd.to_datetime(res['Col1'])",
+                    "score": 1,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python",
+                "pandas",
+                "dataframe",
+                "merge",
+                "concat"
+            ],
+            "score": -1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1293422/python-pandas-%d1%81%d0%be%d0%b5%d0%b4%d0%b8%d0%bd%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b4%d0%b2%d1%83%d1%85-dataframe",
+            "source": "stackoverflow_ru",
+            "published_at": "2021-06-09T10:14:05+00:00",
+            "collected_at": "2026-11-18T20:38:41.292352+00:00"
+        },
+        {
+            "id": "710192",
+            "profession": "Data Analyst",
+            "title": "Python pandas to_sql",
+            "text": "Код ниже создает таблицу из DF в БД Oracle, но все строковые поля в базе помещаются в clob. Есть возможность указывать размерность полей при загрузке из датафрейма? from sqlalchemy import create_engine\nengine = create_engine('oracle+cx_oracle://scott:tiger@tnsname')\n\ntabl.to_sql('RESULT', engine, if_exists='append')",
+            "questions": [
+                "Python pandas to_sql"
+            ],
+            "answers": [
+                {
+                    "text": "Попробуйте вот так: from sqlalchemy import types, create_engine\n\ndtyp = {c:types.VARCHAR(tabl[c].str.len().max())\n        for c in tabl.columns[tabl.dtypes == 'object'].tolist()}\n\ntabl.to_sql('RESULT', engine, if_exists='append', dtype=dtyp)",
+                    "score": 1,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python-3.x",
+                "oracle",
+                "pandas"
+            ],
+            "score": 1,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/710192/python-pandas-to-sql",
+            "source": "stackoverflow_ru",
+            "published_at": "2017-08-24T17:25:49+00:00",
+            "collected_at": "2026-11-18T20:38:41.292574+00:00"
+        },
+        {
+            "id": "1217329",
+            "profession": "Data Analyst",
+            "title": "Восстановление поврежденного файла Excel после неудачного сохранения через Pandas Python",
+            "text": "Файл с расширением .xlsx поврежден.\nОн был сохранен с использованием библиотеки python pandas, и код был прерван, в результате файл был поврежден. Автосохранение отключено. Любые попытки восстановления через офисное ПО или дополнительные онлайн-утилиты тщетны.\nФайл можно попытаться открыть поменяв расширение на .csv, но восстановить в нем кодировку никак не получается.\nКакие еще есть варианты решения проблемы? Могу сбросить файл для тестов. Изображение с неправильной кодировкой: [изображение] [1]",
+            "questions": [
+                "Восстановление поврежденного файла Excel после неудачного сохранения через Pandas Python"
+            ],
+            "answers": [],
+            "tags": [
+                "pandas",
+                "excel",
+                "xlsx",
+                "восстановление"
+            ],
+            "score": 0,
+            "answer_count": 0,
+            "url": "https://ru.stackoverflow.com/questions/1217329/%d0%92%d0%be%d1%81%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d0%be%d0%b2%d1%80%d0%b5%d0%b6%d0%b4%d0%b5%d0%bd%d0%bd%d0%be%d0%b3%d0%be-%d1%84%d0%b0%d0%b9%d0%bb%d0%b0-excel-%d0%bf%d0%be%d1%81%d0%bb%d0%b5-%d0%bd%d0%b5%d1%83%d0%b4%d0%b0%d1%87%d0%bd%d0%be%d0%b3%d0%be-%d1%81%d0%be%d1%85%d1%80%d0%b0%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f-%d1%87%d0%b5%d1%80%d0%b5%d0%b7-panda",
+            "source": "stackoverflow_ru",
+            "published_at": "2020-12-11T12:38:02+00:00",
+            "collected_at": "2026-11-18T20:38:41.292722+00:00"
+        },
+        {
+            "id": "1409493",
+            "profession": "Data Analyst",
+            "title": "Python-Pandas-как сделать split таблицы?",
+            "text": "Всем привет!\nЕсть таблица, которую нужно разделить на блоки по 3 строки и затем по формуле через iloc произвести суммирование соседних клеток, а потом сложить полученные суммы.\nТекущий скрипт выдает список [2, 4, 6, 8, 10, 12] , а должен получиться [12,30] , то есть сложение 2+4+6 и 8+10+12. Функцию split для Pandas я не нашел... import pandas as pd\nimport numpy as np\ncont={'Part_1':[1,2,3,4,5,6],\n      'Part_2':[1,2,3,4,5,6]\n      }\nindex_list=['r1','r2','r3','r4','r5','r6']\ndf = pd.DataFrame(cont,index_list)\n\nfig=[]\nfor i in range(0,len(df)):\n    fig_p=df.iloc[i,0]+df.iloc[i,1]\n    fig.append(fig_p)\n\nprint (fig)\nprint(np.sum(fig))",
+            "questions": [
+                "Python-Pandas-как сделать split таблицы?"
+            ],
+            "answers": [
+                {
+                    "text": "Как-то очень странно. Вы пишите про суммирование по три элемента, а где вы это действие выполняете? Впрочем, тут есть много разных решений, но вот одно из них максимально использующие\nи просто дополняющее то что вы написали. import pandas as pd\nimport numpy as np\ncont={'Part_1':[1,2,3,4,5,6,7,8,9],\n      'Part_2':[1,2,3,4,5,6,7,8,9]\n      }\nindex_list=['r1','r2','r3','r4','r5','r6','r7','r8','r9']\ndf = pd.DataFrame(cont,index_list)\n\nfig=[]\nfor i in range(0,len(df)):\n    fig_p=df.iloc[i,0]+df.iloc[i,1]\n    fig.append(fig_p)\nprint (fig)\nfig1=[]\nfor i in range (0,len(fig),3):\n    fig1.append(np.sum(fig[i:i+3]))\nprint(fig1) Результат: [12, 30, 48] Можно еще и так: fig1=[ft.sum() for ft in np.array_split(fig, 3)]\nprint(fig1) с тем-же результатом. Конечно, если бы пришлось писать код с начала, то его можно (нужно) было бы оптимизировать.",
+                    "score": 0,
+                    "is_accepted": true
+                }
+            ],
+            "tags": [
+                "python"
+            ],
+            "score": 0,
+            "answer_count": 1,
+            "url": "https://ru.stackoverflow.com/questions/1409493/python-pandas-%d0%ba%d0%b0%d0%ba-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-split-%d1%82%d0%b0%d0%b1%d0%bb%d0%b8%d1%86%d1%8b",
+            "source": "stackoverflow_ru",
+            "published_at": "2022-05-13T14:42:05+00:00",
+            "collected_at": "2026-11-18T20:38:41.293051+00:00"
+        }
+    ]
+}
