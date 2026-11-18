@@ -22,6 +22,9 @@ if "round_id" not in st.session_state:
 if "rounds_used" not in st.session_state:
     st.session_state.rounds_used = 0
 
+if "editing_message" not in st.session_state:
+    st.session_state.editing_message = None
+
 st.title("Исследование профессиональной деятельности")
 
 st.write(
@@ -34,9 +37,42 @@ st.write(
 
 st.subheader("История интервью")
 
-for message in st.session_state.messages:
+for i, message in enumerate(st.session_state.messages):
     with st.chat_message(message["role"]):
         st.write(message["content"])
+
+        if message.get("stale", False):
+            st.caption("Устаревшее сообщение")
+
+        if message["role"] == "user":
+            if st.button("Редактировать", key=f"edit_{i}"):
+                st.session_state.editing_message = i
+                st.rerun()
+
+if st.session_state.editing_message is not None:
+    i = st.session_state.editing_message
+
+    st.subheader("Редактирование сообщения")
+
+    edited_text = st.text_area(
+        "Исправьте текст",
+        value=st.session_state.messages[i]["content"],
+        key=f"edited_text_{i}"
+    )
+
+    if st.button("Сохранить изменения"):
+        if edited_text.strip():
+            st.session_state.messages[i]["content"] = edited_text.strip()
+
+            for message in st.session_state.messages[i + 1:]:
+                message["stale"] = True
+
+            st.session_state.editing_message = None
+            st.rerun()
+
+    if st.button("Отмена"):
+        st.session_state.editing_message = None
+        st.rerun()
 
 if st.session_state.sources:
     st.subheader("Источники информации")
