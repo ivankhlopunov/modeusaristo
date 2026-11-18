@@ -1,5 +1,19 @@
 import streamlit as st
+import uuid
+
 from api import send_request
+from database import create_tables, create_interview, save_message, load_messages, get_latest_interview, update_message, mark_following_stale
+
+create_tables()
+
+if "interview_id" not in st.session_state:
+    interview_id = get_latest_interview()
+
+    if interview_id is None:
+        interview_id = str(uuid.uuid4())
+        create_interview(interview_id)
+
+    st.session_state.interview_id = interview_id
 
 st.set_page_config(
     page_title="Исследование профессий",
@@ -8,13 +22,17 @@ st.set_page_config(
 )
 
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = load_messages(
+        st.session_state.interview_id
+    )
+
+    if st.session_state.get("interview_id"):
+        st.session_state.messages = load_messages(
+            st.session_state.interview_id
+        )
 
 if "sources" not in st.session_state:
     st.session_state.sources = []
-
-if "interview_id" not in st.session_state:
-    st.session_state.interview_id = None
 
 if "round_id" not in st.session_state:
     st.session_state.round_id = None
@@ -64,8 +82,18 @@ if st.session_state.editing_message is not None:
         if edited_text.strip():
             st.session_state.messages[i]["content"] = edited_text.strip()
 
+            update_message(
+                st.session_state.messages[i]["id"],
+                edited_text.strip()
+            )
+
             for message in st.session_state.messages[i + 1:]:
                 message["stale"] = True
+
+            mark_following_stale(
+                st.session_state.interview_id,
+                st.session_state.messages[i]["id"]
+            )
 
             st.session_state.editing_message = None
             st.rerun()
@@ -83,9 +111,17 @@ if st.session_state.sources:
 user_message = st.chat_input("Введите ваш ответ...")
 
 if user_message:
+    message_id = save_message(
+        st.session_state.interview_id,
+        "user",
+        user_message
+    )
+
     st.session_state.messages.append({
+        "id": message_id,
         "role": "user",
-        "content": user_message
+        "content": user_message,
+        "stale": False
     })
 
     st.rerun()
