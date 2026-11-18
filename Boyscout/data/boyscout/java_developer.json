@@ -1,0 +1,195 @@
+{
+  "profession": "Java Developer",
+  "vacancies_count": 11,
+  "discussions_count": 20,
+  "median_salary_midpoint_rub": 147500.0,
+  "salary_sample_count": 9,
+  "top_skills": [
+    {
+      "skill": "Java",
+      "vacancies_count": 11
+    },
+    {
+      "skill": "Docker",
+      "vacancies_count": 2
+    },
+    {
+      "skill": "Kubernetes",
+      "vacancies_count": 2
+    },
+    {
+      "skill": "PostgreSQL",
+      "vacancies_count": 2
+    },
+    {
+      "skill": "Spring",
+      "vacancies_count": 2
+    },
+    {
+      "skill": "SQL",
+      "vacancies_count": 2
+    },
+    {
+      "skill": "Git",
+      "vacancies_count": 1
+    },
+    {
+      "skill": "GitLab CI",
+      "vacancies_count": 1
+    },
+    {
+      "skill": "Redis",
+      "vacancies_count": 1
+    }
+  ],
+  "responsibility_examples": [
+    {
+      "text": "Проектирование и реализация различных модулей разрабатываемых решений на Java; Проектирование и реализация общих компонентов и сервисов; Участие в разработке архитектуры решений; Участие в разработке модели данных и схемы ее хранения; Участие в процессе анализа и ревью кода; Участие в организации CI/CD; Написание unit и интеграционных тестов; Оптимизация кода и алгоритмов; Исследовательская и прое",
+      "source_url": "https://trudvsem.ru/vacancy/card/1086316005698/786ca747-0582-11f1-a78e-891cf761e7ce"
+    },
+    {
+      "text": "Компания Сбер Страхование находится в поисках опытного Java-разработчика в команду, которая отвечает за постпродажное обслуживание клиентов в рамках приложения Сбол . Нам требуется сильный специалист уровня Senior, готовый к сложным вызовам и амбициозным задачам, за которыми стоит успех всей нашей компании. Обязанности Проектирование и разработка новых модулей и компонентов для наших продуктов; Оп",
+      "source_url": "https://trudvsem.ru/vacancy/card/5147746474134/ddd97070-e336-11f1-ab45-3d4e40428e31"
+    },
+    {
+      "text": "Разработка прикладных решений и продуктов на платформе Java. Разработка и тестирование программного обеспечения; разработка компонент пользовательского интерфейса (в том числе нестандартных). Проектирование и кодирование компонент бизнес-логики. Создание и корректировка структур базы данных.",
+      "source_url": "https://trudvsem.ru/vacancy/card/1137608000881/5a85bb08-f1df-11f0-ba7d-9959eb3311ba"
+    },
+    {
+      "text": "Разработка бэкенда и поддержка ПО; Оценка трудоемкости задач; Взаимодействие с другими командами: backend-разработчиками; тестировщиками, аналитиками Разработка микросервисов и их API; Участие в формировании программной архитектуры.",
+      "source_url": "https://trudvsem.ru/vacancy/card/1175476114835/5c807a08-8b34-11f1-9699-4f4591bc4f3e"
+    },
+    {
+      "text": "Разработка бэкенда и поддержка ПО; Оценка трудоемкости задач; Взаимодействие с другими командами: backend-разработчиками; тестировщиками, аналитиками Разработка микросервисов и их API; Участие в формировании программной архитектуры.",
+      "source_url": "https://trudvsem.ru/vacancy/card/1175476114835/919ca968-9558-11f1-9253-c35c7c22d563"
+    },
+    {
+      "text": "Наша команда работает над флагманским продуктом компании - программой долгосрочных сбережений, которая является основным продуктом Негосударственного Пенсионного Фонда. Мы ищем возможность усилить команду за счет опытного Java-разработчика уровня Senior. Первый этап отбора на эту вакансию общение с AI-рекрутером. После отклика вам на почту и в чат придет приглашение пройти первичное интервью с Гиг",
+      "source_url": "https://trudvsem.ru/vacancy/card/5147746474134/3e010b44-d921-11f1-90ce-c3fbd5a0a293"
+    },
+    {
+      "text": "разрабатывать новый функционал и участвовать в проектировании архитектуры решений; поддерживать и рефакторить существующий код, повышать его читаемость и производительность; покрывать код тестами, участвовать в код-ревью, соблюдать стандарты разработки команды; анализировать требования, уточнять неясные моменты с аналитиками и менеджерами; участвовать в планировании задач, оценке сроков и выявлени",
+      "source_url": "https://trudvsem.ru/vacancy/card/1076164014805/87431503-c40f-11f1-9a33-81fa0fc133be"
+    },
+    {
+      "text": "Разработка микросервисов Проектирование интерфейсов взаимодействия с другими системами Работа по гибким методологиям разработки Взаимодействие с аналитиками",
+      "source_url": "https://trudvsem.ru/vacancy/card/1157847290985/4806e188-188a-11f1-8162-0bc462b2a22d"
+    }
+  ],
+  "technical_question_examples": [
+    {
+      "question": "Android->localhost->Java Spring",
+      "answer_example": "",
+      "source_url": "https://ru.stackoverflow.com/questions/896501/android-localhost-java-spring",
+      "published_at": "2018-10-22T17:35:35+00:00"
+    },
+    {
+      "question": "Java Spring Framework: Component, Repository, Service - различия",
+      "answer_example": "@Component - это любой произвольный бин, который Spring сможет найти через autoscan . Пример: вы реализовали какой-то класс и хотите сделать его экземпляр доступным через @Autowired . Остальные аннотации обозначают слои типичной многослойной архитектуры: @Repository - это @Component с семантикой DAO-слоя. То место, где вы ходите в базу данных. Spring завернет бросаемые классом исключения в DataAccessException . @Service - это @Component с семанти",
+      "source_url": "https://ru.stackoverflow.com/questions/469477/java-spring-framework-component-repository-service-%d1%80%d0%b0%d0%b7%d0%bb%d0%b8%d1%87%d0%b8%d1%8f",
+      "published_at": "2015-11-25T12:49:36+00:00"
+    },
+    {
+      "question": "Java Spring Framework: структура директорий веб проекта",
+      "answer_example": "",
+      "source_url": "https://ru.stackoverflow.com/questions/469487/java-spring-framework-%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%b0-%d0%b4%d0%b8%d1%80%d0%b5%d0%ba%d1%82%d0%be%d1%80%d0%b8%d0%b9-%d0%b2%d0%b5%d0%b1-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b0",
+      "published_at": "2015-11-25T13:26:14+00:00"
+    },
+    {
+      "question": "Java Spring boot",
+      "answer_example": "",
+      "source_url": "https://ru.stackoverflow.com/questions/1231904/java-spring-boot",
+      "published_at": "2021-01-15T15:33:59+00:00"
+    },
+    {
+      "question": "Java spring boot custom property type",
+      "answer_example": "Вы можете для этого случая использовать @Bean. application.properties: springboot.field=field MySuperCustomProperties.class: @Configuration public class MySuperCustomProperties { @Bean public SomeClass someProperty( @Value(\"${springboot.field}\") String field ) { SomeClass someClass = new SomeClass(); someClass.setField(field); return someClass; } } SomeClass.class: public class SomeClass { private String field; public String getField() { return f",
+      "source_url": "https://ru.stackoverflow.com/questions/856794/java-spring-boot-custom-property-type",
+      "published_at": "2018-07-17T14:52:49+00:00"
+    },
+    {
+      "question": "Как проверять на пустоту сессию в java spring?",
+      "answer_example": "Если я Вас правильно понял, смотрите в сторону HttpSession , например: String sessionUserId = httpSession.getAttribute(\"USER_ID\") != null ? httpSession.getAttribute(\"USER_ID\").toString() : \"USER_UNDEFINED\"; Атрибуты можно получить : httpSession.getAttributeNames() Также время последнего обращения, айди сессии и многое другое. Если речь идет о контроллерах, то добавьте в параметры, например: @RequestMapping(value = \"/Services/getData\", method = Re",
+      "source_url": "https://ru.stackoverflow.com/questions/575528/%d0%9a%d0%b0%d0%ba-%d0%bf%d1%80%d0%be%d0%b2%d0%b5%d1%80%d1%8f%d1%82%d1%8c-%d0%bd%d0%b0-%d0%bf%d1%83%d1%81%d1%82%d0%be%d1%82%d1%83-%d1%81%d0%b5%d1%81%d1%81%d0%b8%d1%8e-%d0%b2-java-spring",
+      "published_at": "2016-10-09T10:28:34+00:00"
+    },
+    {
+      "question": "Java Spring метод который помечен @Async() и @Transactional() тормозит",
+      "answer_example": "",
+      "source_url": "https://ru.stackoverflow.com/questions/1266998/java-spring-%d0%bc%d0%b5%d1%82%d0%be%d0%b4-%d0%ba%d0%be%d1%82%d0%be%d1%80%d1%8b%d0%b9-%d0%bf%d0%be%d0%bc%d0%b5%d1%87%d0%b5%d0%bd-async-%d0%b8-transactional-%d1%82%d0%be%d1%80%d0%bc%d0%be%d0%b7%d0%b8%d1%82",
+      "published_at": "2021-04-06T20:33:26+00:00"
+    },
+    {
+      "question": "Java, Spring как сделать фильтр на сайте по параметрам?",
+      "answer_example": "Сделал с использованием Spring Data Specifications, работает отлично Инфу черпал по ссылкам ниже https://overcoder.net/q/422962/java-spring-rest-api-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0-%D0%BC%D0%BD%D0%BE%D0%B3%D0%B8%D1%85-%D0%BD%D0%B5%D0%BE%D0%B1%D1%8F%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85-%D0%BF%D0%B0%D1%80%D0%B0%D0%BC%D0%B5%D1%82%D1%80%D0%BE%D0%B2 https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-spec",
+      "source_url": "https://ru.stackoverflow.com/questions/1376347/java-spring-%d0%ba%d0%b0%d0%ba-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d1%84%d0%b8%d0%bb%d1%8c%d1%82%d1%80-%d0%bd%d0%b0-%d1%81%d0%b0%d0%b9%d1%82%d0%b5-%d0%bf%d0%be-%d0%bf%d0%b0%d1%80%d0%b0%d0%bc%d0%b5%d1%82%d1%80%d0%b0%d0%bc",
+      "published_at": "2022-01-29T11:19:18+00:00"
+    },
+    {
+      "question": "Запомнить объект для запросов в рамках одной сессии в Java spring boot",
+      "answer_example": "обычно в метод как аргумент добавляют HttpSession session - сессию и сохраняют в нем объект через вызов метода session.setAttribute(key, value); ,если объектов много, то создать статичную map-у static Map<String, HttpSession> connectedUsers;",
+      "source_url": "https://ru.stackoverflow.com/questions/1307730/%d0%97%d0%b0%d0%bf%d0%be%d0%bc%d0%bd%d0%b8%d1%82%d1%8c-%d0%be%d0%b1%d1%8a%d0%b5%d0%ba%d1%82-%d0%b4%d0%bb%d1%8f-%d0%b7%d0%b0%d0%bf%d1%80%d0%be%d1%81%d0%be%d0%b2-%d0%b2-%d1%80%d0%b0%d0%bc%d0%ba%d0%b0%d1%85-%d0%be%d0%b4%d0%bd%d0%be%d0%b9-%d1%81%d0%b5%d1%81%d1%81%d0%b8%d0%b8-%d0%b2-java-spring-boot",
+      "published_at": "2021-07-22T10:18:40+00:00"
+    },
+    {
+      "question": "Java Spring MVC",
+      "answer_example": "Подключите спринговые депенденси в pom.xml . <!-- Spring framework --> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context</artifactId> <version>${org.springframework-version}</version> <exclusions> <exclusion> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> </exclusion> </exclusions> </dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifac",
+      "source_url": "https://ru.stackoverflow.com/questions/543620/java-spring-mvc",
+      "published_at": "2016-07-11T09:44:17+00:00"
+    }
+  ],
+  "caveats": [
+    "Технические вопросы не отражают всю повседневную работу специалиста.",
+    "Принятые ответы форумов могут быть устаревшими или неточными.",
+    "Статистика зарплат не разбита по грейдам и регионам."
+  ],
+  "ai_analysis": {
+    "profession_description": "Java Developer — это профессия, которая включает в себя разработку и поддержку приложений на платформе Java, а также участие в проектировании архитектур и разработке баз данных. Профессия требует глубоких знаний в области Java и других технологий, таких как Docker, Kubernetes, PostgreSQL и Spring.",
+    "key_skills": [
+      "Java",
+      "Docker",
+      "Kubernetes",
+      "PostgreSQL",
+      "Spring",
+      "SQL",
+      "REST API",
+      "Spring Boot",
+      "Spring Data JPA",
+      "Spring Security",
+      "Spring Data Specifications"
+    ],
+    "typical_tasks": [
+      "Разработка и поддержка приложений на Java",
+      "Проектирование и разработка баз данных",
+      "Разработка и настройка Docker контейнеров и Kubernetes приложений",
+      "Разработка и настройка REST API",
+      "Разработка и настройка Spring Boot приложений",
+      "Разработка и настройка Spring Data JPA и Spring Data Specifications",
+      "Разработка и настройка Spring Security",
+      "Разработка и настройка Spring Data Specifications"
+    ],
+    "technical_challenges": [
+      "Разработка приложений с использованием Spring Boot и Spring Data JPA",
+      "Разработка приложений с использованием Docker и Kubernetes",
+      "Разработка приложений с использованием REST API",
+      "Разработка приложений с использованием Spring Security",
+      "Разработка приложений с использованием Spring Data Specifications"
+    ],
+    "interview_topics": [
+      "Какие технологии вы используете для разработки приложений на Java?",
+      "Как вы настраиваете Docker контейнеры и Kubernetes приложения?",
+      "Как вы разрабатываете и настраиваете REST API?",
+      "Как вы разрабатываете и настраиваете Spring Boot приложения?",
+      "Как вы разрабатываете и настраиваете Spring Data JPA и Spring Data Specifications?",
+      "Как вы разрабатываете и настраиваете Spring Security?",
+      "Как вы разрабатываете и настраиваете Spring Data Specifications?"
+    ],
+    "persona_context": [
+      "Вы работаете в команде разработчиков, где каждый разрабатывает отдельные части приложения.",
+      "Вы работаете с базами данных и контейнерами, что требует глубоких знаний в этих областях.",
+      "Вы работаете с REST API и Spring Boot, что позволяет вам создавать приложения, которые могут быть легко масштабированы и масштабируемые.",
+      "Вы работаете с Spring Security, что позволяет вам обеспечивать безопасность приложений.",
+      "Вы работаете с Spring Data JPA и Spring Data Specifications, что позволяет вам создавать приложения, которые могут быть легко масштабированы и масштабируемые."
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-11-18T22:39:50.679712+00:00",
+  "source_files": [
+    "C:\\Users\\user\\modeusaristo\\Boyscout\\data\\trudvsem_2026-11-18.json",
+    "C:\\Users\\user\\modeusaristo\\Boyscout\\data\\forums_2026-11-18.json"
+  ],
+  "vacancies_raw": 34,
+  "vacancies_valid_unique": 32,
+  "vacancies_skipped_or_duplicate": 2,
+  "discussions_raw": 60,
+  "discussions_valid_unique": 60,
+  "discussions_skipped_or_duplicate": 0,
+  "ai_enabled": true
+}
