@@ -96,7 +96,7 @@ def fetch_vacancies(query, offset=0, limit=100):
                 API_URL,
                 params=params,
                 headers=HEADERS,
-                timeout=30,
+                timeout=8,
             )
 
             print(
@@ -347,6 +347,93 @@ def save_to_json(data):
         )
 
     print(f"\nДанные сохранены: {filename}")
+
+def search_vacancies(profession, limit=10, max_pages=3):
+    if limit <= 0 or max_pages <= 0:
+        return []
+    profession_mapping = {
+        "python developer": "Python Developer",
+        "python разработчик": "Python Developer",
+        "python-разработчик": "Python Developer",
+        "программист python": "Python Developer",
+
+        "java developer": "Java Developer",
+        "java разработчик": "Java Developer",
+        "java-разработчик": "Java Developer",
+        "программист java": "Java Developer",
+
+        "data analyst": "Data Analyst",
+        "аналитик данных": "Data Analyst",
+        "sql аналитик": "Data Analyst",
+    }
+
+    normalized_name = profession.strip().lower()
+
+    canonical_profession = profession_mapping.get(
+        normalized_name
+    )
+
+    if canonical_profession is None:
+        raise ValueError(
+            f"Профессия «{profession}» пока не поддерживается"
+        )
+
+    queries = professions[canonical_profession]
+
+    unique_vacancies = {}
+
+    for query in queries:
+
+        for page in range(max_pages):
+
+            offset = page * PAGE_SIZE
+
+            items = fetch_vacancies(
+                query=query,
+                offset=offset,
+                limit=PAGE_SIZE
+            )
+
+            if items is None:
+                break
+
+            if not items:
+                break
+
+            for item in items:
+
+                vacancy = normalize_vacancy(
+                    item,
+                    canonical_profession
+                )
+
+                if vacancy is None:
+                    continue
+
+                if not is_relevant_vacancy(
+                    vacancy,
+                    canonical_profession
+                ):
+                    continue
+
+                vacancy_id = vacancy.get("id")
+
+                if not vacancy_id:
+                    continue
+
+                unique_key = f"trudvsem:{vacancy_id}"
+
+                unique_vacancies[unique_key] = vacancy
+
+                if len(unique_vacancies) >= limit:
+                    return list(unique_vacancies.values())
+
+            if len(items) < PAGE_SIZE:
+                break
+
+            time.sleep(REQUEST_DELAY)
+
+    return list(unique_vacancies.values())
 
 def main():
     print("=" * 50)
