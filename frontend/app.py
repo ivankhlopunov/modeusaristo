@@ -1,7 +1,13 @@
 import streamlit as st
 import uuid
 
-from api import send_request
+from api import (
+    send_request,
+    get_professions,
+    get_vacancies,
+    get_discussions,
+    get_knowledge_base
+)
 from database import create_tables, create_interview, save_message, load_messages, get_latest_interview, update_message, mark_following_stale
 
 create_tables()
@@ -126,31 +132,66 @@ if user_message:
 
     st.rerun()
 
-profession = st.text_input(
-    "Введите название профессии",
-    placeholder="Например: Разработчик ПО"
-)
+
+st.subheader("Данные о профессии")
+
+professions = get_professions()
+
+if professions:
+    profession = st.selectbox(
+        "Выберите профессию",
+        professions
+    )
+else:
+    profession = None
+    st.error("Не удалось получить список профессий из FastAPI.")
 
 description = st.text_area(
-    "Дополнительное описание (необязательно)"
+    "Дополнительное описание (необязательно)",
+    key="profession_description"
 )
 
-if st.button("Начать исследование"):
+if profession and st.button(
+    "Загрузить данные профессии",
+    key="load_profession_data"
+):
 
-    if profession.strip():
+    vacancies = get_vacancies(profession)
+    discussions = get_discussions(profession)
+    knowledge_base = get_knowledge_base(profession)
 
-        result = send_request(
-            profession.strip(),
-            description.strip()
-        )
-
-        if result:
-            st.success("Ответ успешно получен!")
-
-            st.json(result["json"])
-
-        else:
-            st.error("Не удалось получить ответ от сервера.")
-
+    st.subheader("Вакансии")
+    if vacancies is not None:
+        st.write(f"Найдено вакансий: {len(vacancies)}")
+        st.json(vacancies)
     else:
-        st.warning("Введите название профессии.")
+        st.error("Не удалось загрузить вакансии.")
+
+    st.subheader("Обсуждения")
+    if discussions is not None:
+        st.write(f"Найдено обсуждений: {len(discussions)}")
+        st.json(discussions)
+    else:
+        st.error("Не удалось загрузить обсуждения.")
+
+    st.subheader("База знаний")
+    if knowledge_base is not None:
+        st.json(knowledge_base)
+    else:
+        st.error("Не удалось загрузить базу знаний.")
+
+if profession and st.button(
+    "Начать исследование",
+    key="start_research"
+):
+
+    result = send_request(
+        profession,
+        description.strip()
+    )
+
+    if result:
+        st.success("Ответ успешно получен!")
+        st.json(result["json"])
+    else:
+        st.error("Не удалось получить ответ от сервера.")
