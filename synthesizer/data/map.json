@@ -1,143 +1,183 @@
 {
-  "profession": "string",
+  "profession": "Python Developer",
   "version": 1,
-  "data_mode": "real",
+  "data_mode": "mock",
   "nodes": [
     {
-      "id": "5b977c3a-4194-4fcc-9d56-03a6747dd874",
+      "id": "a88c6524-7e39-428e-9e1c-dd4c978a7558",
       "parent_id": null,
       "kind": "profession",
-      "title": "string",
+      "title": "Python Developer",
       "operationality": "non_operational",
       "evidence": {
         "evidence_message_ids": [],
-        "evidence_source_ids": [],
+        "evidence_source_ids": [
+          "mock-vacancy-001",
+          "mock-forum-001"
+        ],
         "quotes": []
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     },
     {
-      "id": "191790a3-5380-4411-860f-42b6a6a2f6a2",
-      "parent_id": "5b977c3a-4194-4fcc-9d56-03a6747dd874",
+      "id": "a189f58c-325b-46c3-8a94-73bd539e3579",
+      "parent_id": "a88c6524-7e39-428e-9e1c-dd4c978a7558",
       "kind": "function",
       "title": "Разработка и поддержка программных решений",
       "operationality": "uncertain",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-001"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я разрабатываю API на Python."
+        ]
       },
       "review_status": "needs_evidence",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [
         "Требуется подтверждение"
       ],
       "evidence_status": "active"
     },
     {
-      "id": "d148334f-8cf1-46cf-87a5-cd2a8585e1fe",
-      "parent_id": "191790a3-5380-4411-860f-42b6a6a2f6a2",
+      "id": "cc93a934-7885-45a7-a7b6-fdc5806a5b2f",
+      "parent_id": "a189f58c-325b-46c3-8a94-73bd539e3579",
       "kind": "task",
       "title": "Разрабатывать простые API",
       "operationality": "operational",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-001"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я разрабатываю API на Python."
+        ]
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     },
     {
-      "id": "2831dc69-44e8-429d-887c-af9c1f389fff",
-      "parent_id": "191790a3-5380-4411-860f-42b6a6a2f6a2",
+      "id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
+      "parent_id": "a189f58c-325b-46c3-8a94-73bd539e3579",
       "kind": "task",
       "title": "Диагностировать и исправлять ошибки",
       "operationality": "operational",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-002"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я изучаю логи, исправляю ошибки и запускаю тесты."
+        ]
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     },
     {
-      "id": "9ad46338-15c8-4191-80d8-673930755541",
-      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "id": "22c6024e-1f7b-4b68-aa53-43c070a96fee",
+      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
       "kind": "action",
       "title": "Изучать логи",
       "operationality": "operational",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-002"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я изучаю логи, исправляю ошибки и запускаю тесты."
+        ]
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     },
     {
-      "id": "ecfff043-7d4d-40d5-a112-9a08a59ecdb2",
-      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "id": "6f3e2035-a3b8-4bb1-bd36-0a20e2680267",
+      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
       "kind": "action",
       "title": "Воспроизводить проблему",
       "operationality": "operational",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-002"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я изучаю логи, исправляю ошибки и запускаю тесты."
+        ]
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     },
     {
-      "id": "59b25939-5733-4bf0-91f0-7512e6f00fce",
-      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "id": "a40ae4ee-be68-4e6d-bb8c-a5050a7e939f",
+      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
       "kind": "action",
       "title": "Исправлять код",
       "operationality": "operational",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-003"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я использую Git для управления версиями."
+        ]
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     },
     {
-      "id": "4b17fa50-b5f8-4e61-8f63-fe457a752d9f",
-      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "id": "4cc15cbb-a6e4-48f9-b90f-cc93df8c3ddb",
+      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
       "kind": "action",
       "title": "Запускать тесты",
       "operationality": "operational",
       "evidence": {
-        "evidence_message_ids": [],
+        "evidence_message_ids": [
+          "msg-003"
+        ],
         "evidence_source_ids": [],
-        "quotes": []
+        "quotes": [
+          "Я использую Git для управления версиями."
+        ]
       },
       "review_status": "needs_review",
-      "is_mock": false,
+      "is_mock": true,
       "review_notes": [],
       "evidence_status": "active"
     }
   ],
   "available_message_ids": [
-    "string"
+    "msg-001",
+    "msg-002",
+    "msg-003"
   ],
-  "available_source_ids": [],
+  "available_source_ids": [
+    "mock-vacancy-001",
+    "mock-forum-001"
+  ],
   "transcript_version": 1,
+  "scout_warnings": [
+    "Все записи демонстрационные, не получены с hh.ru или форумов."
+  ],
+  "scout_data_mode": "mock",
   "validation_errors": []
 }

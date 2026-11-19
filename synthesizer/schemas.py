@@ -1,3 +1,4 @@
+
 from typing import Any
 from pydantic import BaseModel, Field
 
@@ -12,14 +13,15 @@ class TranscriptMessage(BaseModel):
 
 class ComposeRequest(BaseModel):
     profession: str = Field(min_length=1, max_length=150)
-    scout: dict[str, Any]
+    level: str = "Junior"
     transcript: list[TranscriptMessage]
+    scout: dict[str, Any] | None = None
 
 
 class Evidence(BaseModel):
-    evidence_message_ids: list[str] = []
-    evidence_source_ids: list[str] = []
-    quotes: list[str] = []
+    evidence_message_ids: list[str] = Field(default_factory=list)
+    evidence_source_ids: list[str] = Field(default_factory=list)
+    quotes: list[str] = Field(default_factory=list)
 
 
 class MapNode(BaseModel):
@@ -31,4 +33,4 @@ class MapNode(BaseModel):
     evidence: Evidence
     review_status: str = "needs_review"
     is_mock: bool = False
-    review_notes: list[str] = []
+    review_notes: list[str] = Field(default_factory=list)

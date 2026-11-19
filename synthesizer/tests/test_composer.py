@@ -1,3 +1,4 @@
+from synthesizer.versioning import compare_with_previous_map
 from synthesizer.composer import compose_map
 from synthesizer.validator import validate_map
 from synthesizer.versioning import invalidate_stale_evidence
@@ -112,3 +113,56 @@ def test_deleted_message_invalidates_evidence():
 
     assert node["evidence_status"] == "stale"
     assert node["review_status"] == "needs_evidence"
+
+def test_previous_map_detects_edited_message():
+    scout, transcript = sample_data()
+
+    previous = compose_map("Python Developer", scout, transcript)
+
+    edited_transcript = [
+        {
+            **message,
+            "text": "Я разрабатываю приложения на Django.",
+            "version": 2,
+        }
+        if message["id"] == "msg-001"
+        else message
+        for message in transcript
+    ]
+
+    new_map = compose_map("Python Developer", scout, edited_transcript)
+
+    updated = compare_with_previous_map(
+        new_map,
+        previous,
+        edited_transcript,
+    )
+
+    affected = [
+        node for node in updated["nodes"]
+        if node.get("evidence_status") == "stale"
+    ]
+
+    assert len(affected) > 0
+    assert all(node["review_status"] == "needs_evidence" for node in affected)
+
+
+def test_validator_rejects_wrong_hierarchy():
+    scout, transcript = sample_data()
+    result = compose_map("Python Developer", scout, transcript)
+
+    profession = next(
+        node for node in result["nodes"]
+        if node["kind"] == "profession"
+    )
+
+    function = next(
+        node for node in result["nodes"]
+        if node["kind"] == "function"
+    )
+
+    function["parent_id"] = None
+
+    errors = validate_map(result)
+
+    assert any("отсутствует родитель" in error for error in errors)
