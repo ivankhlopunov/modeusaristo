@@ -1,0 +1,23 @@
+[
+    {
+      "id": "msg-001",
+      "speaker": "specialist",
+      "text": "Я разрабатываю простые API на Python.",
+      "version": 1,
+      "is_mock": true
+    },
+    {
+      "id": "msg-002",
+      "speaker": "specialist",
+      "text": "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему.",
+      "version": 1,
+      "is_mock": true
+    },
+    {
+      "id": "msg-003",
+      "speaker": "specialist",
+      "text": "После этого исправляю код и запускаю тесты.",
+      "version": 1,
+      "is_mock": true
+    }
+  ]
