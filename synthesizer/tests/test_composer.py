@@ -1,5 +1,6 @@
 from synthesizer.composer import compose_map
 from synthesizer.validator import validate_map
+from synthesizer.versioning import invalidate_stale_evidence
 
 
 def sample_data():
@@ -70,3 +71,44 @@ def test_every_action_has_parent():
     for node in result["nodes"]:
         if node["kind"] == "action":
             assert node["parent_id"] is not None
+
+def test_edited_message_invalidates_evidence():
+    scout, transcript = sample_data()
+    result = compose_map("Python Developer", scout, transcript)
+
+    edited_transcript = [
+        {**message, "text": "Новый текст сообщения", "version": 2}
+        if message["id"] == "msg-001"
+        else message
+        for message in transcript
+    ]
+
+    updated = invalidate_stale_evidence(result, edited_transcript)
+
+    node = next(
+        node for node in updated["nodes"]
+        if "msg-001" in node["evidence"]["evidence_message_ids"]
+    )
+
+    assert node["evidence_status"] == "stale"
+    assert node["review_status"] == "needs_evidence"
+
+
+def test_deleted_message_invalidates_evidence():
+    scout, transcript = sample_data()
+    result = compose_map("Python Developer", scout, transcript)
+
+    updated_transcript = [
+        message for message in transcript
+        if message["id"] != "msg-002"
+    ]
+
+    updated = invalidate_stale_evidence(result, updated_transcript)
+
+    node = next(
+        node for node in updated["nodes"]
+        if "msg-002" in node["evidence"]["evidence_message_ids"]
+    )
+
+    assert node["evidence_status"] == "stale"
+    assert node["review_status"] == "needs_evidence"

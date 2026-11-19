@@ -1,3 +1,4 @@
+
 from uuid import uuid4
 
 
@@ -79,16 +80,16 @@ def compose_map(profession, scout, transcript):
     ]
 
     actions = [
-        ("Изучать логи", "msg-002"),
-        ("Воспроизводить проблему", "msg-002"),
-        ("Исправлять код", "msg-003"),
-        ("Запускать тесты", "msg-003"),
+        (task2_id, "Изучать логи", "msg-002"),
+        (task2_id, "Воспроизводить проблему", "msg-002"),
+        (task2_id, "Исправлять код", "msg-003"),
+        (task2_id, "Запускать тесты", "msg-003"),
     ]
 
-    for title, message_id in actions:
+    for parent_id, title, message_id in actions:
         nodes.append({
             "id": str(uuid4()),
-            "parent_id": task2_id,
+            "parent_id": parent_id,
             "kind": "action",
             "title": title,
             "operationality": "operational",

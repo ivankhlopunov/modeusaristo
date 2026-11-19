@@ -1,0 +1,143 @@
+{
+  "profession": "string",
+  "version": 1,
+  "data_mode": "real",
+  "nodes": [
+    {
+      "id": "5b977c3a-4194-4fcc-9d56-03a6747dd874",
+      "parent_id": null,
+      "kind": "profession",
+      "title": "string",
+      "operationality": "non_operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "191790a3-5380-4411-860f-42b6a6a2f6a2",
+      "parent_id": "5b977c3a-4194-4fcc-9d56-03a6747dd874",
+      "kind": "function",
+      "title": "Разработка и поддержка программных решений",
+      "operationality": "uncertain",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_evidence",
+      "is_mock": false,
+      "review_notes": [
+        "Требуется подтверждение"
+      ],
+      "evidence_status": "active"
+    },
+    {
+      "id": "d148334f-8cf1-46cf-87a5-cd2a8585e1fe",
+      "parent_id": "191790a3-5380-4411-860f-42b6a6a2f6a2",
+      "kind": "task",
+      "title": "Разрабатывать простые API",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "parent_id": "191790a3-5380-4411-860f-42b6a6a2f6a2",
+      "kind": "task",
+      "title": "Диагностировать и исправлять ошибки",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "9ad46338-15c8-4191-80d8-673930755541",
+      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "kind": "action",
+      "title": "Изучать логи",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "ecfff043-7d4d-40d5-a112-9a08a59ecdb2",
+      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "kind": "action",
+      "title": "Воспроизводить проблему",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "59b25939-5733-4bf0-91f0-7512e6f00fce",
+      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "kind": "action",
+      "title": "Исправлять код",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "4b17fa50-b5f8-4e61-8f63-fe457a752d9f",
+      "parent_id": "2831dc69-44e8-429d-887c-af9c1f389fff",
+      "kind": "action",
+      "title": "Запускать тесты",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": false,
+      "review_notes": [],
+      "evidence_status": "active"
+    }
+  ],
+  "available_message_ids": [
+    "string"
+  ],
+  "available_source_ids": [],
+  "transcript_version": 1,
+  "validation_errors": []
+}
