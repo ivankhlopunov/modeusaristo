@@ -20,21 +20,38 @@ ACTION_PATTERNS = [
         "pattern": r"\bзапускаю\s+тесты\b",
         "title": "Запускать тесты",
     },
+    {
+        "pattern": r"\bпишу\s+тесты\b",
+        "title": "Писать тесты",
+    },
+    {
+        "pattern": r"\bпроверяю\s+(код|работу|результат)\b",
+        "title": "Проверять код и результат",
+    },
+    {
+        "pattern": r"\bсоздаю\s+функции\b",
+        "title": "Создавать функции",
+    },
 ]
 
 
 def compose_map(profession, scout, transcript):
+
+    # Сохраняем исходные сообщения без изменения текста.
     messages = {
         message["id"]: message
         for message in transcript
+        if message.get("id") and isinstance(message.get("text"), str)
     }
 
     source_ids = []
 
     for section in ("vacancies", "forum_discussions"):
         for item in scout.get(section, []):
-            if item.get("id"):
+            if isinstance(item, dict) and item.get("id"):
                 source_ids.append(item["id"])
+
+    source_ids = list(dict.fromkeys(source_ids))
 
     is_mock = (
         scout.get("data_mode") == "mock"
@@ -44,6 +61,7 @@ def compose_map(profession, scout, transcript):
         )
     )
 
+    # Создание доказательств.
     def make_evidence(message_ids):
         valid_ids = [
             message_id
@@ -63,11 +81,12 @@ def compose_map(profession, scout, transcript):
     profession_id = str(uuid4())
     function_id = str(uuid4())
 
+    # Ищем сообщения, подтверждающие функцию.
     function_message_ids = [
         message_id
         for message_id, message in messages.items()
         if re.search(
-            r"\b(api|апи|программ|код)\w*",
+            r"\b(api|апи|программ\w*|код\w*)",
             message["text"],
             re.IGNORECASE,
         )
@@ -105,35 +124,39 @@ def compose_map(profession, scout, transcript):
         },
     ]
 
-    # Задача: разработка простых API.
-    api_task_id = str(uuid4())
+    methodologist_questions = []
 
+    # Ищем задачу по разработке API.
     api_message_ids = [
         message_id
         for message_id, message in messages.items()
         if re.search(
-            r"\b(разрабатываю|создаю|пишу)\s+простые?\s+api\b",
+            r"\b(разрабатываю|создаю|пишу)\s+"
+            r"(простые?\s+)?api\b",
             message["text"],
             re.IGNORECASE,
         )
     ]
 
     if api_message_ids:
-        nodes.append(
-            {
-                "id": api_task_id,
-                "parent_id": function_id,
-                "kind": "task",
-                "title": "Разрабатывать простые API",
-                "operationality": "operational",
-                "evidence": make_evidence(api_message_ids),
-                "review_status": "needs_review",
-                "is_mock": is_mock,
-                "review_notes": [],
-            }
+        nodes.append({
+            "id": str(uuid4()),
+            "parent_id": function_id,
+            "kind": "task",
+            "title": "Разрабатывать API на Python",
+            "operationality": "operational",
+            "evidence": make_evidence(api_message_ids),
+            "review_status": "needs_review",
+            "is_mock": is_mock,
+            "review_notes": [],
+        })
+    else:
+        methodologist_questions.append(
+            "Какие API специалист разрабатывает "
+            "и какие этапы работы выполняет?"
         )
 
-    # Задача: диагностика и исправление ошибок.
+    # Ищем конкретные действия.
     error_actions = []
 
     for message_id, message in messages.items():
@@ -143,73 +166,67 @@ def compose_map(profession, scout, transcript):
                 message["text"],
                 re.IGNORECASE,
             ):
-                error_actions.append(
-                    {
-                        "title": item["title"],
-                        "message_id": message_id,
-                    }
-                )
+                error_actions.append({
+                    "title": item["title"],
+                    "message_id": message_id,
+                })
 
+    # Группируем действия в задачу.
     if error_actions:
         errors_task_id = str(uuid4())
 
-        error_message_ids = list(
-            dict.fromkeys(
-                item["message_id"]
-                for item in error_actions
-            )
-        )
+        error_message_ids = list(dict.fromkeys(
+            item["message_id"]
+            for item in error_actions
+        ))
 
-        nodes.append(
-            {
-                "id": errors_task_id,
-                "parent_id": function_id,
-                "kind": "task",
-                "title": "Диагностировать и исправлять ошибки",
+        nodes.append({
+            "id": errors_task_id,
+            "parent_id": function_id,
+            "kind": "task",
+            "title": "Диагностировать и исправлять ошибки",
+            "operationality": "operational",
+            "evidence": make_evidence(error_message_ids),
+            "review_status": "needs_review",
+            "is_mock": is_mock,
+            "review_notes": [],
+        })
+
+        for item in error_actions:
+            nodes.append({
+                "id": str(uuid4()),
+                "parent_id": errors_task_id,
+                "kind": "action",
+                "title": item["title"],
                 "operationality": "operational",
-                "evidence": make_evidence(error_message_ids),
+                "evidence": make_evidence([item["message_id"]]),
                 "review_status": "needs_review",
                 "is_mock": is_mock,
                 "review_notes": [],
-            }
+            })
+    else:
+        methodologist_questions.append(
+            "Какие конкретные действия выполняет специалист "
+            "при диагностике и исправлении ошибок?"
         )
 
-        for item in error_actions:
-            nodes.append(
-                {
-                    "id": str(uuid4()),
-                    "parent_id": errors_task_id,
-                    "kind": "action",
-                    "title": item["title"],
-                    "operationality": "operational",
-                    "evidence": make_evidence(
-                        [item["message_id"]]
-                    ),
-                    "review_status": "needs_review",
-                    "is_mock": is_mock,
-                    "review_notes": [],
-                }
-            )
+    # Вопросы методологу.
+    if function_message_ids:
+        methodologist_questions.append(
+            "Какие именно функции выполняет специалист "
+            "при разработке и поддержке программных решений?"
+        )
+    else:
+        methodologist_questions.append(
+            "Какие основные функции выполняет специалист?"
+        )
 
-    # Если конкретные задачи не найдены, требуется проверка методологом.
+    # Отмечаем недостаток доказательств.
     if not api_message_ids and not error_actions:
-        nodes[1]["operationality"] = "uncertain"
         nodes[1]["review_status"] = "needs_evidence"
         nodes[1]["review_notes"].append(
             "Не удалось извлечь задачи и действия. "
             "Требуется дополнительная стенограмма."
-        )
-
-    methodologist_questions = []
-
-    if not api_message_ids:
-        methodologist_questions.append(
-            "Какие API специалист разрабатывает и какие этапы работы выполняет?"
-        )
-
-    if not error_actions:
-        methodologist_questions.append(
-            "Какие конкретные действия специалист выполняет при диагностике ошибок?"
         )
 
     return {

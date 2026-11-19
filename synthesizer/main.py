@@ -12,8 +12,13 @@ from .versioning import (
     invalidate_stale_evidence,
     compare_with_previous_map,
 )
+from .quality_review import quality_review
 
-app = FastAPI(title="ModeusAristo Synthesizer", version="1.0.0")
+
+app = FastAPI(
+    title="ModeusAristo Synthesizer",
+    version="1.1.0",
+)
 
 MAP_PATH = Path(__file__).parent / "data" / "map.json"
 SCOUT_URL = "http://127.0.0.1:8000"
@@ -21,10 +26,16 @@ SCOUT_URL = "http://127.0.0.1:8000"
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "synthesizer"}
+    return {
+        "status": "ok",
+        "service": "synthesizer",
+    }
 
 
-async def get_scout_data(profession: str, level: str) -> dict:
+async def get_scout_data(
+    profession: str,
+    level: str,
+) -> dict:
     try:
         async with httpx.AsyncClient(timeout=20.0) as client:
             response = await client.post(
@@ -34,19 +45,26 @@ async def get_scout_data(profession: str, level: str) -> dict:
                     "level": level,
                 },
             )
+
             response.raise_for_status()
             return response.json()
 
     except httpx.HTTPStatusError as error:
         raise HTTPException(
             status_code=502,
-            detail=f"Scout вернул ошибку: {error.response.status_code}",
+            detail=(
+                f"Scout вернул ошибку: "
+                f"{error.response.status_code}"
+            ),
         ) from error
 
     except httpx.RequestError as error:
         raise HTTPException(
             status_code=503,
-            detail="Scout недоступен. Проверьте, запущен ли его сервер.",
+            detail=(
+                "Scout недоступен. "
+                "Проверьте, запущен ли его сервер."
+            ),
         ) from error
 
 
@@ -56,7 +74,7 @@ async def compose(request: ComposeRequest):
         message.model_dump()
         for message in request.transcript
     ]
-
+    print("TRANSCRIPT:", repr(transcript[0]["text"]))
     scout = request.scout
 
     if scout is None:
@@ -74,9 +92,15 @@ async def compose(request: ComposeRequest):
     previous_map = None
 
     if MAP_PATH.exists() and MAP_PATH.stat().st_size > 0:
-        previous_map = json.loads(
-            MAP_PATH.read_text(encoding="utf-8")
-        )
+        try:
+            previous_map = json.loads(
+                MAP_PATH.read_text(encoding="utf-8")
+            )
+        except json.JSONDecodeError as error:
+            raise HTTPException(
+                status_code=500,
+                detail="Файл map.json содержит некорректный JSON",
+            ) from error
 
     result = compose_map(
         request.profession,
@@ -84,7 +108,11 @@ async def compose(request: ComposeRequest):
         transcript,
     )
 
-    result = invalidate_stale_evidence(result, transcript)
+    result = invalidate_stale_evidence(
+        result,
+        transcript,
+    )
+
     result = compare_with_previous_map(
         result,
         previous_map,
@@ -92,17 +120,33 @@ async def compose(request: ComposeRequest):
     )
 
     result["scout_warnings"] = scout.get("warnings", [])
-    result["scout_data_mode"] = scout.get("data_mode", "unknown")
+    result["scout_data_mode"] = scout.get(
+        "data_mode",
+        "unknown",
+    )
 
     errors = validate_map(result)
+
     result["validation_errors"] = errors
+    result["quality_review"] = quality_review(result)
 
     if errors:
-        raise HTTPException(status_code=422, detail=errors)
+        raise HTTPException(
+            status_code=422,
+            detail=errors,
+        )
 
-    MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
+    MAP_PATH.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
     MAP_PATH.write_text(
-        json.dumps(result, ensure_ascii=False, indent=2),
+        json.dumps(
+            result,
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
 
@@ -117,4 +161,12 @@ def export_map():
             detail="Карта ещё не создана",
         )
 
-    return json.loads(MAP_PATH.read_text(encoding="utf-8"))
+    try:
+        return json.loads(
+            MAP_PATH.read_text(encoding="utf-8")
+        )
+    except json.JSONDecodeError as error:
+        raise HTTPException(
+            status_code=500,
+            detail="Файл карты содержит некорректный JSON",
+        ) from error
