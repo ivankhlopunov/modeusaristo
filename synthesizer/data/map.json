@@ -4,7 +4,7 @@
   "data_mode": "mock",
   "nodes": [
     {
-      "id": "a88c6524-7e39-428e-9e1c-dd4c978a7558",
+      "id": "28beaabc-3691-4b73-859f-c3ec3d7e6c02",
       "parent_id": null,
       "kind": "profession",
       "title": "Python Developer",
@@ -23,40 +23,46 @@
       "evidence_status": "active"
     },
     {
-      "id": "a189f58c-325b-46c3-8a94-73bd539e3579",
-      "parent_id": "a88c6524-7e39-428e-9e1c-dd4c978a7558",
+      "id": "e3bedd36-1f8a-44ce-aa17-a83d153b6f1f",
+      "parent_id": "28beaabc-3691-4b73-859f-c3ec3d7e6c02",
       "kind": "function",
       "title": "Разработка и поддержка программных решений",
       "operationality": "uncertain",
       "evidence": {
         "evidence_message_ids": [
-          "msg-001"
+          "msg-001",
+          "msg-002",
+          "msg-003"
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я разрабатываю API на Python."
+          "Я разрабатываю простые API на Python.",
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему.",
+          "После этого исправляю код и запускаю тесты."
         ]
       },
-      "review_status": "needs_evidence",
+      "review_status": "needs_review",
       "is_mock": true,
       "review_notes": [
-        "Требуется подтверждение"
+        "Функция сформирована по ключевым словам. Требуется проверка методологом."
       ],
       "evidence_status": "active"
     },
     {
-      "id": "cc93a934-7885-45a7-a7b6-fdc5806a5b2f",
-      "parent_id": "a189f58c-325b-46c3-8a94-73bd539e3579",
+      "id": "a0307f1e-562b-4f28-b1c8-d207d0db3625",
+      "parent_id": "e3bedd36-1f8a-44ce-aa17-a83d153b6f1f",
       "kind": "task",
       "title": "Разрабатывать простые API",
       "operationality": "operational",
       "evidence": {
         "evidence_message_ids": [
-          "msg-001"
+          "msg-001",
+          "msg-002"
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я разрабатываю API на Python."
+          "Я разрабатываю простые API на Python.",
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему."
         ]
       },
       "review_status": "needs_review",
@@ -65,18 +71,20 @@
       "evidence_status": "active"
     },
     {
-      "id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
-      "parent_id": "a189f58c-325b-46c3-8a94-73bd539e3579",
+      "id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
+      "parent_id": "e3bedd36-1f8a-44ce-aa17-a83d153b6f1f",
       "kind": "task",
       "title": "Диагностировать и исправлять ошибки",
       "operationality": "operational",
       "evidence": {
         "evidence_message_ids": [
-          "msg-002"
+          "msg-002",
+          "msg-003"
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я изучаю логи, исправляю ошибки и запускаю тесты."
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему.",
+          "После этого исправляю код и запускаю тесты."
         ]
       },
       "review_status": "needs_review",
@@ -85,8 +93,8 @@
       "evidence_status": "active"
     },
     {
-      "id": "22c6024e-1f7b-4b68-aa53-43c070a96fee",
-      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
+      "id": "e7913dd9-7960-4cb9-a24e-2480a1a461c3",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
       "kind": "action",
       "title": "Изучать логи",
       "operationality": "operational",
@@ -96,7 +104,7 @@
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я изучаю логи, исправляю ошибки и запускаю тесты."
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему."
         ]
       },
       "review_status": "needs_review",
@@ -105,8 +113,8 @@
       "evidence_status": "active"
     },
     {
-      "id": "6f3e2035-a3b8-4bb1-bd36-0a20e2680267",
-      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
+      "id": "c4715559-0ac4-429c-bc52-11f4db74bdc4",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
       "kind": "action",
       "title": "Воспроизводить проблему",
       "operationality": "operational",
@@ -116,7 +124,7 @@
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я изучаю логи, исправляю ошибки и запускаю тесты."
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему."
         ]
       },
       "review_status": "needs_review",
@@ -125,8 +133,8 @@
       "evidence_status": "active"
     },
     {
-      "id": "a40ae4ee-be68-4e6d-bb8c-a5050a7e939f",
-      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
+      "id": "5900005c-215a-4143-8e15-1112eea35cf3",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
       "kind": "action",
       "title": "Исправлять код",
       "operationality": "operational",
@@ -136,7 +144,7 @@
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я использую Git для управления версиями."
+          "После этого исправляю код и запускаю тесты."
         ]
       },
       "review_status": "needs_review",
@@ -145,8 +153,8 @@
       "evidence_status": "active"
     },
     {
-      "id": "4cc15cbb-a6e4-48f9-b90f-cc93df8c3ddb",
-      "parent_id": "fb6a8e11-fdbb-4a4a-94c7-7a7fa94f0fa1",
+      "id": "537bcda2-b313-4c88-bd2f-aaa2060537a2",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
       "kind": "action",
       "title": "Запускать тесты",
       "operationality": "operational",
@@ -156,7 +164,7 @@
         ],
         "evidence_source_ids": [],
         "quotes": [
-          "Я использую Git для управления версиями."
+          "После этого исправляю код и запускаю тесты."
         ]
       },
       "review_status": "needs_review",
@@ -174,7 +182,7 @@
     "mock-vacancy-001",
     "mock-forum-001"
   ],
-  "transcript_version": 1,
+  "transcript_version": 2,
   "scout_warnings": [
     "Все записи демонстрационные, не получены с hh.ru или форумов."
   ],
