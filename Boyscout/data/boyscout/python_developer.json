@@ -1,19 +1,15 @@
 {
   "profession": "Python Developer",
-  "vacancies_count": 10,
+  "vacancies_count": 9,
   "discussions_count": 35,
   "top_skills": [
     {
       "skill": "Python",
-      "vacancies_count": 10
+      "vacancies_count": 9
     },
     {
       "skill": "PostgreSQL",
-      "vacancies_count": 5
-    },
-    {
-      "skill": "FastAPI",
-      "vacancies_count": 3
+      "vacancies_count": 4
     },
     {
       "skill": "Docker",
@@ -28,19 +24,19 @@
       "vacancies_count": 3
     },
     {
-      "skill": "APScheduler",
-      "vacancies_count": 2
-    },
-    {
       "skill": "Django",
       "vacancies_count": 2
     },
     {
-      "skill": "Linux",
-      "vacancies_count": 1
+      "skill": "FastAPI",
+      "vacancies_count": 2
     },
     {
       "skill": "aiohttp",
+      "vacancies_count": 1
+    },
+    {
+      "skill": "APScheduler",
       "vacancies_count": 1
     },
     {
@@ -62,13 +58,13 @@
     {
       "skill": "MySQL",
       "vacancies_count": 1
+    },
+    {
+      "skill": "Spring",
+      "vacancies_count": 1
     }
   ],
   "responsibility_examples": [
-    {
-      "text": "Разрабатывать и развивать REST API на FastAPI; Реализовывать бизнес-логику и интеграции с внешними сервисами с использованием Skyfield; Проектировать схемы БД и оптимизировать запросы к PostgreSQL через SQLModel; Обрабатывать и анализировать геопространственные данные (GDAL, matplotlib); Писать модульные и интеграционные тесты (pytest); Участвовать в проектировании архитектуры оптимизации производ",
-      "source_url": "https://trudvsem.ru/vacancy/card/1117847610297/91e80aa8-c194-11f1-aa68-7523fb122f6d"
-    },
     {
       "text": "Автоматизация и поддержка рабочего места менеджера Контакт-центра",
       "source_url": "https://trudvsem.ru/vacancy/card/1107232016583/fe060b58-4dbe-11f1-8f4a-2bcb7115eec3"
@@ -96,6 +92,10 @@
     {
       "text": "Ежедневно в Сбер поступают множество обращений от клиентов и наша задача предоставить им максимально комфортный сервис. Для этого нам необходимо осуществлять мониторинг операций и контролировать качество предоставления услуг. Разработчики анализируют данные, выявляют отклонения в работе специалистов контактного центра с целью дальнейшей оптимизации процессов, а также моделируют зависимости между д",
       "source_url": "https://trudvsem.ru/vacancy/card/5147746474134/091753a0-cea7-11f1-bf48-094328b591a3"
+    },
+    {
+      "text": "Создание программного кода в соответствии с техническим заданием (готовыми спецификациями) Оптимизация программного кода с использованием специализированных программных средств Оценка и согласование сроков выполнения поставленных задач",
+      "source_url": "https://trudvsem.ru/vacancy/card/1195958032181/16a51ae0-90b7-11f1-b18b-c5df91bc45ab"
     }
   ],
   "technical_question_examples": [
