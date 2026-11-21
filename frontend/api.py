@@ -1,4 +1,3 @@
-
 import requests
 
 API_URL = "https://httpbin.org/post"
