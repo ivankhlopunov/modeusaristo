@@ -70,17 +70,31 @@ async def get_scout_data(
 
 @app.post("/compose")
 async def compose(request: ComposeRequest):
+    # Преобразуем сообщения Pydantic в обычные словари.
     transcript = [
         message.model_dump()
         for message in request.transcript
     ]
-    print("TRANSCRIPT:", repr(transcript[0]["text"]))
+
+    # Безопасно обрабатываем пустое интервью.
+    if transcript:
+        print("TRANSCRIPT:", repr(transcript[0]["text"]))
+    else:
+        print("TRANSCRIPT: пустое интервью")
+
     scout = request.scout
 
+    # Если данные Scout не переданы, запрашиваем их.
     if scout is None:
         scout = await get_scout_data(
             request.profession,
             request.level,
+        )
+
+    if not isinstance(scout, dict):
+        raise HTTPException(
+            status_code=502,
+            detail="Scout вернул некорректный формат данных",
         )
 
     if scout.get("status") != "success":
@@ -89,6 +103,7 @@ async def compose(request: ComposeRequest):
             detail="Scout не смог получить данные",
         )
 
+    # Загружаем предыдущую версию карты.
     previous_map = None
 
     if MAP_PATH.exists() and MAP_PATH.stat().st_size > 0:
@@ -102,29 +117,35 @@ async def compose(request: ComposeRequest):
                 detail="Файл map.json содержит некорректный JSON",
             ) from error
 
+    # Строим новую карту.
     result = compose_map(
         request.profession,
         scout,
         transcript,
     )
 
+    # Проверяем актуальность доказательств.
     result = invalidate_stale_evidence(
         result,
         transcript,
     )
 
+    # Сравниваем карту с предыдущей версией.
     result = compare_with_previous_map(
         result,
         previous_map,
         transcript,
     )
 
+    # Добавляем информацию о Scout.
     result["scout_warnings"] = scout.get("warnings", [])
     result["scout_data_mode"] = scout.get(
         "data_mode",
         "unknown",
     )
 
+    # Проверяем структуру карты.
+    # Текущая validate_map принимает один аргумент.
     errors = validate_map(result)
 
     result["validation_errors"] = errors
@@ -136,6 +157,7 @@ async def compose(request: ComposeRequest):
             detail=errors,
         )
 
+    # Сохраняем карту.
     MAP_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
