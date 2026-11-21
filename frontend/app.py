@@ -8,10 +8,29 @@ from api import (
     get_discussions,
     get_knowledge_base
 )
-from database import create_tables, create_interview, save_message, load_messages, get_latest_interview, update_message, mark_following_stale
 
+from database import (
+    create_tables,
+    create_interview,
+    save_message,
+    load_messages,
+    get_latest_interview,
+    update_message,
+    mark_following_stale
+)
+
+
+st.set_page_config(
+    page_title="Исследование профессий",
+    page_icon="🔎",
+    layout="wide"
+)
+
+# Создаём таблицы базы данных
 create_tables()
 
+
+# Создаём или загружаем интервью
 if "interview_id" not in st.session_state:
     interview_id = get_latest_interview()
 
@@ -21,22 +40,15 @@ if "interview_id" not in st.session_state:
 
     st.session_state.interview_id = interview_id
 
-st.set_page_config(
-    page_title="Исследование профессий",
-    page_icon="🔎",
-    layout="wide"
-)
 
+# Загружаем историю сообщений
 if "messages" not in st.session_state:
     st.session_state.messages = load_messages(
         st.session_state.interview_id
     )
 
-    if st.session_state.get("interview_id"):
-        st.session_state.messages = load_messages(
-            st.session_state.interview_id
-        )
 
+# Инициализация состояния приложения
 if "sources" not in st.session_state:
     st.session_state.sources = []
 
@@ -49,6 +61,8 @@ if "rounds_used" not in st.session_state:
 if "editing_message" not in st.session_state:
     st.session_state.editing_message = None
 
+
+# Заголовок приложения
 st.title("Исследование профессиональной деятельности")
 
 st.write(
@@ -59,9 +73,12 @@ st.write(
     f"Завершено раундов: {st.session_state.rounds_used} / 4"
 )
 
+
+# История интервью
 st.subheader("История интервью")
 
 for i, message in enumerate(st.session_state.messages):
+
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
@@ -73,7 +90,10 @@ for i, message in enumerate(st.session_state.messages):
                 st.session_state.editing_message = i
                 st.rerun()
 
+
+# Редактирование сообщения
 if st.session_state.editing_message is not None:
+
     i = st.session_state.editing_message
 
     st.subheader("Редактирование сообщения")
@@ -85,7 +105,9 @@ if st.session_state.editing_message is not None:
     )
 
     if st.button("Сохранить изменения"):
+
         if edited_text.strip():
+
             st.session_state.messages[i]["content"] = edited_text.strip()
 
             update_message(
@@ -108,15 +130,21 @@ if st.session_state.editing_message is not None:
         st.session_state.editing_message = None
         st.rerun()
 
+
+# Источники информации
 if st.session_state.sources:
+
     st.subheader("Источники информации")
 
     for source in st.session_state.sources:
         st.write(source)
 
+
+# Поле ответа пользователя
 user_message = st.chat_input("Введите ваш ответ...")
 
 if user_message:
+
     message_id = save_message(
         st.session_state.interview_id,
         "user",
@@ -133,24 +161,34 @@ if user_message:
     st.rerun()
 
 
+# Данные о профессии
 st.subheader("Данные о профессии")
 
 professions = get_professions()
 
 if professions:
+
     profession = st.selectbox(
         "Выберите профессию",
         professions
     )
+
+    level = st.selectbox(
+        "Выберите уровень специалиста",
+        ["Junior", "Middle", "Senior"]
+    )
+
 else:
+
     profession = None
-    st.error("Не удалось получить список профессий из FastAPI.")
+    level = None
 
-description = st.text_area(
-    "Дополнительное описание (необязательно)",
-    key="profession_description"
-)
+    st.error(
+        "Не удалось получить список профессий из FastAPI."
+    )
 
+
+# Загрузка данных профессии
 if profession and st.button(
     "Загрузить данные профессии",
     key="load_profession_data"
@@ -161,6 +199,7 @@ if profession and st.button(
     knowledge_base = get_knowledge_base(profession)
 
     st.subheader("Вакансии")
+
     if vacancies is not None:
         st.write(f"Найдено вакансий: {len(vacancies)}")
         st.json(vacancies)
@@ -168,6 +207,7 @@ if profession and st.button(
         st.error("Не удалось загрузить вакансии.")
 
     st.subheader("Обсуждения")
+
     if discussions is not None:
         st.write(f"Найдено обсуждений: {len(discussions)}")
         st.json(discussions)
@@ -175,23 +215,31 @@ if profession and st.button(
         st.error("Не удалось загрузить обсуждения.")
 
     st.subheader("База знаний")
+
     if knowledge_base is not None:
         st.json(knowledge_base)
     else:
         st.error("Не удалось загрузить базу знаний.")
 
-if profession and st.button(
+
+# Начало исследования
+if profession and level and st.button(
     "Начать исследование",
     key="start_research"
 ):
 
     result = send_request(
         profession,
-        description.strip()
+        level
     )
 
     if result:
+
         st.success("Ответ успешно получен!")
-        st.json(result["json"])
+        st.json(result)
+
     else:
-        st.error("Не удалось получить ответ от сервера.")
+
+        st.error(
+            "Не удалось получить ответ от сервера."
+        )

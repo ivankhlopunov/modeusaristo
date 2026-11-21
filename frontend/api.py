@@ -1,20 +1,23 @@
 import requests
+from urllib.parse import quote
 
-API_URL = "https://httpbin.org/post"
+# Адрес FastAPI
+MODEUS_API_URL = "http://127.0.0.1:8000"
 
 
-def send_request(profession, description):
-    # Данные для отправки
+# Начало исследования профессии
+def send_request(profession, level):
+
     data = {
         "profession": profession,
-        "description": description
+        "level": level
     }
 
     try:
         response = requests.post(
-            API_URL,
+            f"{MODEUS_API_URL}/scout/search",
             json=data,
-            timeout=15
+            timeout=60
         )
 
         response.raise_for_status()
@@ -22,16 +25,13 @@ def send_request(profession, description):
         return response.json()
 
     except requests.exceptions.RequestException as error:
-        print("Ошибка HTTP-запроса:", error)
+        print("Ошибка начала исследования:", error)
         return None
 
 
-# Адрес нашего FastAPI
-MODEUS_API_URL = "http://127.0.0.1:8000"
-
-
-# Получаем список профессий
+# Получение списка профессий
 def get_professions():
+
     try:
         response = requests.get(
             f"{MODEUS_API_URL}/api/professions",
@@ -47,11 +47,12 @@ def get_professions():
         return None
 
 
-# Получаем вакансии профессии
+# Получение вакансий профессии
 def get_vacancies(profession, limit=10):
+
     try:
         response = requests.get(
-            f"{MODEUS_API_URL}/api/professions/{profession}/vacancies",
+            f"{MODEUS_API_URL}/api/professions/{quote(profession, safe='')}/vacancies",
             params={"limit": limit},
             timeout=15
         )
@@ -65,11 +66,12 @@ def get_vacancies(profession, limit=10):
         return None
 
 
-# Получаем обсуждения профессии
+# Получение обсуждений профессии
 def get_discussions(profession, limit=20):
+
     try:
         response = requests.get(
-            f"{MODEUS_API_URL}/api/professions/{profession}/discussions",
+            f"{MODEUS_API_URL}/api/professions/{quote(profession, safe='')}/discussions",
             params={"limit": limit},
             timeout=15
         )
@@ -83,11 +85,12 @@ def get_discussions(profession, limit=20):
         return None
 
 
-# Получаем базу знаний профессии
+# Получение базы знаний профессии
 def get_knowledge_base(profession):
+
     try:
         response = requests.get(
-            f"{MODEUS_API_URL}/api/professions/{profession}/knowledge-base",
+            f"{MODEUS_API_URL}/api/professions/{quote(profession, safe='')}/knowledge-base",
             timeout=15
         )
 
