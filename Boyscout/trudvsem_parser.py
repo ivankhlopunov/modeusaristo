@@ -96,7 +96,7 @@ def fetch_vacancies(query, offset=0, limit=100):
                 API_URL,
                 params=params,
                 headers=HEADERS,
-                timeout=8,
+                timeout=(10, 40),
             )
 
             print(
@@ -235,9 +235,6 @@ def normalize_vacancy(item, profession):
         "profession": profession,
         "name": title,
         "company": clean(company.get("name")),
-        "salary_min": vacancy.get("salary_min"),
-        "salary_max": vacancy.get("salary_max"),
-        "currency": vacancy.get("currency") or "RUB",
         "region": clean(region.get("name")),
         "experience": experience,
         "schedule": clean(vacancy.get("schedule")),

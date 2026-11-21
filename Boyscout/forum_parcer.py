@@ -1,354 +1,246 @@
+
+import calendar
 import json
+import re
 import time
-from datetime import datetime, timezone
+
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from urllib.parse import urljoin, urlparse
+from html import unescape
+import feedparser 
 import requests
 from bs4 import BeautifulSoup
-BASE_URL = "https://api.stackexchange.com/2.3"
+
+
+BASE_URL = "https://qna.habr.com"
+LATEST_RSS = BASE_URL + "/rss/questions_latest/"
+
 DATA_DIR = Path(__file__).resolve().parent / "data"
-REQUEST_TIMEOUT = 15
-MAX_QUESTIONS = 20
+
+MAX_AGE_DAYS = 365
+
 PROFESSIONS = {
     "Python Developer": [
-        "python django",
-        "python fastapi",
-        "python разработка"
+        "python",
+        "django",
+        "fastapi"
     ],
-
     "Java Developer": [
-        "java spring",
-        "java backend",
-        "java разработка"
+        "java",
+        "spring",
     ],
-
     "Data Analyst": [
-        "sql анализ данных",
-        "python pandas",
-        "аналитика данных"
+        "sql",
+        "pandas",
     ]
 }
 
-def clean_html(html):
+HEADERS = {
+    "User-Agent": "ModeusAristoBoyScout/1.0",
+    "Accept": "application/rss+xml, application/xml, text/xml"
+}
 
-    if not html:
-        return ""
 
-    soup = BeautifulSoup(
-        html,
-        "html.parser"
+def clean_html(text):
+    soup = BeautifulSoup(str(text or ""), "html.parser")
+    return soup.get_text(" ", strip=True)
+
+
+def normalize(text):
+    return re.sub(r"\s+", " ", str(text or "").lower()).strip()
+
+
+def get_rss(url):
+    response = requests.get(
+        url,
+        headers=HEADERS,
+        timeout=15
     )
+    response.raise_for_status()
 
-    return soup.get_text(
-        separator=" ",
-        strip=True
-    )
+    feed = feedparser.parse(response.content)
 
-def api_request(endpoint, params):
-    url = f"{BASE_URL}/{endpoint}"
+    if feed.bozo and not feed.entries:
+        raise ValueError("Некорректный RSS: " + url)
 
-    try:
+    return feed.entries
 
-        response = requests.get(
-            url,
-            params=params,
-            timeout=REQUEST_TIMEOUT
-        )
 
-        print(
-            f"HTTP {response.status_code}: "
-            f"{endpoint}"
-        )
+def discover_tag_rss(tag):
+ 
+    url = BASE_URL + "/tag/" + tag + "/questions"
 
-        response.raise_for_status()
+    response = requests.get(url, timeout=15)
+    response.raise_for_status()
 
-        data = response.json()
+    soup = BeautifulSoup(response.text, "html.parser")
 
-        backoff = data.get("backoff", 0)
+    for link in soup.find_all("link", href=True):
+        href = link["href"]
+        mime = link.get("type", "")
 
-        if backoff:
-            print(f"API требует паузу: {backoff} сек.")
-            time.sleep(backoff)
+        if "rss" in mime.lower() or "rss" in href.lower():
+            rss_url = urljoin(BASE_URL, href)
 
-        return data
+            if urlparse(rss_url).hostname == "qna.habr.com":
+                return rss_url
 
-    except requests.RequestException as error:
+    return None
 
-        print(f"Ошибка запроса: {error}")
 
+def get_date(entry):
+    parsed = entry.get("published_parsed")
+
+    if not parsed:
+        parsed = entry.get("updated_parsed")
+
+    if not parsed:
         return None
 
-    except ValueError:
+    return datetime.fromtimestamp(
+        calendar.timegm(parsed),
+        tz=timezone.utc
+    )
 
-        print("Ошибка обработки JSON")
 
+def entry_to_discussion(entry, profession, tag):
+    url = entry.get("link", "")
+
+    if not url:
         return None
 
-def search_questions(query, limit=10):
-
-    params = {
-        "site": "ru.stackoverflow",
-        "q": query,
-        "sort": "relevance",
-        "order": "desc",
-        "pagesize": limit,
-        "filter": "withbody"
-    }
-
-    data = api_request(
-        "search/advanced",
-        params
-    )
-
-    if data is None:
-        return []
-
-    return data.get("items", [])
-
-def get_answers(question_ids):
-    if not question_ids:
-        return {}
-
-    ids = ";".join(
-        str(question_id)
-        for question_id in question_ids
-    )
-
-    params = {
-        "site": "ru.stackoverflow",
-        "sort": "votes",
-        "order": "desc",
-        "pagesize": 100,
-        "filter": "withbody"
-    }
-
-    data = api_request(
-        f"questions/{ids}/answers",
-        params
-    )
-
-    if data is None:
-        return {}
-
-    answers_by_question = {}
-
-    for answer in data.get("items", []):
-
-        question_id = answer.get("question_id")
-
-        answers_by_question.setdefault(
-            question_id,
-            []
-        )
-
-        if len(answers_by_question[question_id]) >= 2:
-            continue
-
-        answers_by_question[question_id].append({
-            "text": clean_html(
-                answer.get("body", "")
-            )[:1500],
-
-            "score": answer.get("score", 0),
-
-            "is_accepted": answer.get(
-                "is_accepted",
-                False
-            )
-        })
-
-    return answers_by_question
-
-def normalize_discussion(
-    question,
-    profession,
-    answers
-):
-
-    question_id = question.get("question_id")
-
-    if question_id is None:
+    if urlparse(url).hostname != "qna.habr.com":
         return None
 
-    title = clean_html(
-        question.get("title", "")
+    match = re.search(r"/q/(\d+)", url)
+    if not match:
+        return None
+
+    published = get_date(entry)
+
+    if published is None:
+        return None
+
+    cutoff = datetime.now(timezone.utc) - timedelta(
+        days=MAX_AGE_DAYS
     )
 
+    if published < cutoff:
+        return None
+
+    title = clean_html(entry.get("title"))
     text = clean_html(
-        question.get("body", "")
+        entry.get("summary") or entry.get("description")
     )
+
+    if not title:
+        return None
 
     return {
-        "id": str(question_id),
-
+        "id": match.group(1),
         "profession": profession,
-
-        "title": title,
-
-        "text": text[:2000],
-
-        "questions": [title],
-
-        "answers": answers,
-
-        "tags": question.get("tags", []),
-
-        "score": question.get("score", 0),
-
-        "answer_count": question.get(
-            "answer_count",
-            0
-        ),
-
-        "url": question.get("link"),
-
-        "source": "stackoverflow_ru",
-
-        "published_at": datetime.fromtimestamp(
-            question.get("creation_date", 0),
-            tz=timezone.utc
-        ).isoformat(),
-
+        "title": unescape(title),
+        "text": text[:2500],
+        "questions": [unescape(title)],
+        "answers": [],
+        "tags": [tag],
+        "score": None,
+        "answer_count": None,
+        "url": url,
+        "source": "habr_qna",
+        "published_at": published.isoformat(),
         "collected_at": datetime.now(
             timezone.utc
         ).isoformat()
     }
 
 
-def collect_profession(profession, queries):
+def collect_profession(profession, tags):
+    unique = {}
 
-    print("\n" + "=" * 50)
-    print(f"Профессия: {profession}")
-    print("=" * 50)
+    for tag in tags:
+        print(f"Проверяем тег: {tag}")
 
-    unique_questions = {}
+        try:
+            rss_url = discover_tag_rss(tag)
 
-    for query in queries:
-
-        print(f"\nПоиск: {query}")
-
-        questions = search_questions(
-            query,
-            limit=10
-        )
-
-        for question in questions:
-
-            question_id = question.get("question_id")
-
-            if question_id is None:
+            if not rss_url:
+                print("RSS тега не найден")
                 continue
 
-            unique_questions[question_id] = question
+            entries = get_rss(rss_url)
+
+            for entry in entries:
+                discussion = entry_to_discussion(
+                    entry, profession, tag
+                )
+
+                if discussion is None:
+                    continue
+
+                unique[discussion["id"]] = discussion
+
+        except (requests.RequestException, ValueError) as error:
+            print("Ошибка источника:", error)
 
         time.sleep(1)
 
-    questions = list(
-        unique_questions.values()
-    )[:MAX_QUESTIONS]
+    return list(unique.values())
 
-    print(
-        f"Уникальных вопросов: {len(questions)}"
-    )
-
-    question_ids = [
-        question["question_id"]
-        for question in questions
-    ]
-
-    answers_by_question = get_answers(
-        question_ids
-    )
-
-    discussions = []
-
-    for question in questions:
-
-        question_id = question["question_id"]
-
-        answers = answers_by_question.get(
-            question_id,
-            []
-        )
-
-        discussion = normalize_discussion(
-            question,
-            profession,
-            answers
-        )
-
-        if discussion:
-            discussions.append(discussion)
-
-    return discussions
-
-def save_json(data):
-
-    DATA_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    today = datetime.now().strftime(
-        "%Y-%m-%d"
-    )
-
-    filename = (
-        DATA_DIR /
-        f"forums_{today}.json"
-    )
-
-    with open(
-        filename,
-        "w",
-        encoding="utf-8"
-    ) as file:
-
-        json.dump(
-            data,
-            file,
-            ensure_ascii=False,
-            indent=4
-        )
-
-    print(f"\nДанные сохранены: {filename}")
 
 def main():
-
-    print("=" * 50)
-    print("MODEUSARISTO — FORUM SCOUT")
-    print("=" * 50)
-
     all_discussions = []
+    errors = []
 
-    for profession, queries in PROFESSIONS.items():
+    print("MODEUSARISTO — BOYSCOUT HABR Q&A")
+
+    for profession, tags in PROFESSIONS.items():
+        print("\nПрофессия:", profession)
 
         discussions = collect_profession(
-            profession,
-            queries
+            profession, tags
         )
+
+        print("Найдено:", len(discussions))
 
         all_discussions.extend(discussions)
 
-    result = {
-        "source": "stackoverflow_ru",
+        if not discussions:
+            errors.append(
+                f"Нет свежих вопросов для {profession}"
+            )
 
+    result = {
+        "source": "habr_qna",
         "collected_at": datetime.now(
             timezone.utc
         ).isoformat(),
-
         "total": len(all_discussions),
-
-        "forum_discussions": all_discussions
+        "forum_discussions": all_discussions,
+        "errors": errors
     }
 
-    save_json(result)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    print("\n" + "=" * 50)
-    print(
-        f"ВСЕГО ОБСУЖДЕНИЙ: "
-        f"{len(all_discussions)}"
+    filename = DATA_DIR / (
+        "forums_habr_"
+        + datetime.now().strftime("%Y-%m-%d")
+        + ".json"
     )
-    print("=" * 50)
+
+    with filename.open("w", encoding="utf-8") as file:
+        json.dump(
+            result,
+            file,
+            ensure_ascii=False,
+            indent=2
+        )
+
+    print("\nСохранено:", filename)
+    print("Всего:", len(all_discussions))
+    print("Предупреждения:", errors)
+
 
 if __name__ == "__main__":
     main()

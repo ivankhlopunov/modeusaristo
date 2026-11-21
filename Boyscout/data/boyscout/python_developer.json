@@ -1,9 +1,7 @@
 {
   "profession": "Python Developer",
   "vacancies_count": 10,
-  "discussions_count": 20,
-  "median_salary_midpoint_rub": 70000.0,
-  "salary_sample_count": 9,
+  "discussions_count": 35,
   "top_skills": [
     {
       "skill": "Python",
@@ -102,118 +100,115 @@
   ],
   "technical_question_examples": [
     {
-      "question": "Автоматическое заполнение пользователя в формах django",
-      "answer_example": "Возможно initial поможет в вашем вопросе. form = PostForm(request.POST, initial = {'author':request.user})",
-      "source_url": "https://ru.stackoverflow.com/questions/1403383/%d0%90%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b5-%d0%b7%d0%b0%d0%bf%d0%be%d0%bb%d0%bd%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d1%82%d0%b5%d0%bb%d1%8f-%d0%b2-%d1%84%d0%be%d1%80%d0%bc%d0%b0%d1%85-django",
-      "published_at": "2022-04-24T10:37:37+00:00"
-    },
-    {
-      "question": "Не срабатывает пагинатор в классе ListView",
-      "answer_example": "{% if page_obj.has_other_pages %} <nav aria-label=\"...\"> <ul class=\"pagination\"> {% if page_obj.has_previous %} <li class=\"page-item\"> <a class=\"page-link\" href=\"?page={{ page_obj.previous_page_number }}\" tabindex=\"-1\">Previous</a> </li> {% endif %} {% for p in page_obj.paginator.page_range %} {% if page_obj.number == p %} <li class=\"page-item active\" aria-current=\"page\"> <a class=\"page-link\" href=\"?page={{ p }}\">{{ p }} <span class=\"sr-only\"></s",
-      "source_url": "https://ru.stackoverflow.com/questions/1433836/%d0%9d%d0%b5-%d1%81%d1%80%d0%b0%d0%b1%d0%b0%d1%82%d1%8b%d0%b2%d0%b0%d0%b5%d1%82-%d0%bf%d0%b0%d0%b3%d0%b8%d0%bd%d0%b0%d1%82%d0%be%d1%80-%d0%b2-%d0%ba%d0%bb%d0%b0%d1%81%d1%81%d0%b5-listview",
-      "published_at": "2022-07-28T06:57:23+00:00"
-    },
-    {
-      "question": "Django registration",
-      "answer_example": "Создай модель User (могу сослаться на документацию, но приведу пример кода: class User(models.Model): username = models.CharField(max_length=50) name = models.CharField(max_length=50) passwd = models.CharField(max_length=50) # ^ # | # | # ТАК ДЕЛАТЬ НЕ СТОИТ!!! # ПАРОЛИ НАДО ШИФРОВАТЬ!!!!!! И зарегистрируй её в admin.py admin.site.register(User) Кстати, у админки очень много всяких возможностей, да и у Джанги в целом. Почитай книгу \"Django 2.1 на",
-      "source_url": "https://ru.stackoverflow.com/questions/1439067/django-registration",
-      "published_at": "2022-08-13T17:39:17+00:00"
-    },
-    {
-      "question": "Как сохранить модель в forms.Form django?",
-      "answer_example": "Не надо создавать метод save, а просто передать данные в модель def saveForm(self, **kwargs): related_dict = kwargs['related_dict'] form_from_dict = related_dict['form'] f = StoreRelated( store=form_from_dict.cleaned_data['name'], related_uuid=related_dict['uuid']) f.save()",
-      "source_url": "https://ru.stackoverflow.com/questions/1439113/%d0%9a%d0%b0%d0%ba-%d1%81%d0%be%d1%85%d1%80%d0%b0%d0%bd%d0%b8%d1%82%d1%8c-%d0%bc%d0%be%d0%b4%d0%b5%d0%bb%d1%8c-%d0%b2-forms-form-django",
-      "published_at": "2022-08-13T20:56:28+00:00"
-    },
-    {
-      "question": "Как сделать подкатегории для каждой категории в Django?",
-      "answer_example": "Можно ли сделать все это не создавая класс подкатегории в models.py? Нужно! Потому что подкатегорий может быть больше одной. Удобно использовать связь ForeignKey на ту же самую модель, указав self первым аргументом. models.py: class Category(models.Model): parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True) views.py: categories = Category.objects.filter(parent_category=None) template.html: {% for category ",
-      "source_url": "https://ru.stackoverflow.com/questions/1149688/%d0%9a%d0%b0%d0%ba-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d0%bf%d0%be%d0%b4%d0%ba%d0%b0%d1%82%d0%b5%d0%b3%d0%be%d1%80%d0%b8%d0%b8-%d0%b4%d0%bb%d1%8f-%d0%ba%d0%b0%d0%b6%d0%b4%d0%be%d0%b9-%d0%ba%d0%b0%d1%82%d0%b5%d0%b3%d0%be%d1%80%d0%b8%d0%b8-%d0%b2-django",
-      "published_at": "2020-07-06T17:20:09+00:00"
-    },
-    {
-      "question": "mod_wsgi русские символы в пути проблема",
-      "answer_example": "вообщем перерыл весь инет. куча советов. Но я упорно не мог найти у себя на сервере где у меня конфиг apache wsgi. ТОчнее я нашел, но он пустой. там ничего нет. Оказалось locale проблема в нем. сделал 2 настройки в конфиге самого апача apache2.conf LANG=en_US.UTF-8 locale=en_US.UTF-8 и все заработало помогла эта статья https://github.com/GrahamDumpleton/mod_wsgi/issues/625",
-      "source_url": "https://ru.stackoverflow.com/questions/1441179/mod-wsgi-%d1%80%d1%83%d1%81%d1%81%d0%ba%d0%b8%d0%b5-%d1%81%d0%b8%d0%bc%d0%b2%d0%be%d0%bb%d1%8b-%d0%b2-%d0%bf%d1%83%d1%82%d0%b8-%d0%bf%d1%80%d0%be%d0%b1%d0%bb%d0%b5%d0%bc%d0%b0",
-      "published_at": "2022-08-20T19:41:23+00:00"
-    },
-    {
-      "question": "Форма не заполняет поля в БД",
-      "answer_example": "Так у тебя данных нет в форме. Форма отправляется на сервер в виде POST запроса. if request.method == \"POST\": form = AddGameForm(request.POST) <-- Ты должен заполнить свою форму данными из POST if form.is_valid(): .... И если данные будут валидными, все сохранится.",
-      "source_url": "https://ru.stackoverflow.com/questions/1443613/%d0%a4%d0%be%d1%80%d0%bc%d0%b0-%d0%bd%d0%b5-%d0%b7%d0%b0%d0%bf%d0%be%d0%bb%d0%bd%d1%8f%d0%b5%d1%82-%d0%bf%d0%be%d0%bb%d1%8f-%d0%b2-%d0%91%d0%94",
-      "published_at": "2022-08-28T19:11:00+00:00"
-    },
-    {
-      "question": "Как в django создать страницу с шаблонами и передать её через ajax?",
+      "question": "Как реализовать локальную нейросеть, которая слушает звук с рабочего стола?",
       "answer_example": "",
-      "source_url": "https://ru.stackoverflow.com/questions/1445447/%d0%9a%d0%b0%d0%ba-%d0%b2-django-%d1%81%d0%be%d0%b7%d0%b4%d0%b0%d1%82%d1%8c-%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b8%d1%86%d1%83-%d1%81-%d1%88%d0%b0%d0%b1%d0%bb%d0%be%d0%bd%d0%b0%d0%bc%d0%b8-%d0%b8-%d0%bf%d0%b5%d1%80%d0%b5%d0%b4%d0%b0%d1%82%d1%8c-%d0%b5%d1%91-%d1%87%d0%b5%d1%80%d0%b5%d0%b7-ajax",
-      "published_at": "2022-09-03T19:59:52+00:00"
+      "source_url": "http://qna.habr.com/q/1413102",
+      "published_at": "2026-11-16T06:55:00+00:00"
     },
     {
-      "question": "django переход на разные страницы",
-      "answer_example": "разобралась, в html шаблоне поставила <a href=\"{% url 'login' %}\"..> для кнопки войти и <a href=\"{% url 'registration' %}\"..> для кнопки регистрации, теперь все работает",
-      "source_url": "https://ru.stackoverflow.com/questions/1445611/django-%d0%bf%d0%b5%d1%80%d0%b5%d1%85%d0%be%d0%b4-%d0%bd%d0%b0-%d1%80%d0%b0%d0%b7%d0%bd%d1%8b%d0%b5-%d1%81%d1%82%d1%80%d0%b0%d0%bd%d0%b8%d1%86%d1%8b",
-      "published_at": "2022-09-04T12:19:13+00:00"
+      "question": "Путь в бэкенд с нуля: что учить для первого оффера и как выглядел ваш опыт?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1413084",
+      "published_at": "2026-11-13T20:32:51+00:00"
     },
     {
-      "question": "Ошибка модуль не имеет атрибута entry_set. (DJANGO)",
-      "answer_example": "Проблема решена. Я просто заменил строку description = Description.entry_set.all в views.py под имя моего модуля description = topic.description_set.all . Так как я делал по книге я не понял что entry_set это не одна функция.",
-      "source_url": "https://ru.stackoverflow.com/questions/1443824/%d0%9e%d1%88%d0%b8%d0%b1%d0%ba%d0%b0-%d0%bc%d0%be%d0%b4%d1%83%d0%bb%d1%8c-%d0%bd%d0%b5-%d0%b8%d0%bc%d0%b5%d0%b5%d1%82-%d0%b0%d1%82%d1%80%d0%b8%d0%b1%d1%83%d1%82%d0%b0-entry-set-django",
-      "published_at": "2022-08-29T12:43:46+00:00"
+      "question": "Какова ситуация на рынке труда в сфере IT в России?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412948",
+      "published_at": "2026-10-31T17:57:19+00:00"
+    },
+    {
+      "question": "PySide6 на Windows, SVG-стрелочки в QSS для QTreeWidget и QComboBox почему не отображаются?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412888",
+      "published_at": "2026-10-25T17:04:39+00:00"
+    },
+    {
+      "question": "Написал на Python + PySide6 легковесную среду для запуска скриптов. Что можно добавить или улучшить?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412884",
+      "published_at": "2026-10-25T10:25:31+00:00"
+    },
+    {
+      "question": "Как стоит начать в it?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412866",
+      "published_at": "2026-10-22T13:14:01+00:00"
+    },
+    {
+      "question": "Где найти кофаундера в проект?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412802",
+      "published_at": "2026-10-17T13:44:34+00:00"
+    },
+    {
+      "question": "Как уместить десятки контейнеров на одном сервере с RTX 4090 (24ГБ), чтобы хватило памяти на KV-кэш, буфер и активации для ии?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412776",
+      "published_at": "2026-10-14T16:45:48+00:00"
+    },
+    {
+      "question": "1С + AI или Python + AI: какое направление перспективнее для начинающего разработчика?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412762",
+      "published_at": "2026-10-13T23:54:32+00:00"
+    },
+    {
+      "question": "Как в Python распознавать паттерны японских свечей без сложной C-сборки TA-Lib?",
+      "answer_example": "",
+      "source_url": "http://qna.habr.com/q/1412754",
+      "published_at": "2026-10-13T18:00:59+00:00"
     }
   ],
   "caveats": [
     "Технические вопросы не отражают всю повседневную работу специалиста.",
-    "Принятые ответы форумов могут быть устаревшими или неточными.",
-    "Статистика зарплат не разбита по грейдам и регионам."
+    "Принятые ответы форумов могут быть устаревшими или неточными."
   ],
   "ai_analysis": {
-    "profession_description": "Python Developer — это профессия, связанная с разработкой программного обеспечения на языке программирования Python. Профессионалы этой профессии обычно работают в сфере информационных технологий, создавая и поддерживая различные приложения и системы.",
+    "profession_description": "Python Developer — это профессионал, создающий программное обеспечение с использованием языка Python. Они разрабатывают, тестируют и поддерживают приложения, используя современные технологии и методологии.",
     "key_skills": [
       "Python",
-      "PostgreSQL",
-      "FastAPI",
-      "Docker",
-      "GitLab CI",
-      "Kubernetes",
-      "APScheduler",
-      "Django",
-      "Linux",
-      "aiohttp",
-      "dramatiq",
-      "RabbitMQ",
-      "Redis"
+      "ОOP (Объектно-ориентированное программирование)",
+      "Web-разработка",
+      "Базы данных",
+      "Тестирование",
+      "CI/CD",
+      "Аналитика данных",
+      "Аутсорсинг",
+      "Python-библиотеки",
+      "Веб-технологии"
     ],
     "typical_tasks": [
-      "Разработка и поддержка приложений на Python",
-      "Использование баз данных (PostgreSQL)",
-      "Работа с веб-технологиями (FastAPI, Django)",
-      "Использование контейнеризации (Docker, Kubernetes)",
-      "Управление проектами с помощью GitLab CI",
-      "Работа с сетевыми технологиями (RabbitMQ, Redis)",
-      "Работа с операционной системой (Linux)"
+      "Разработка и тестирование приложений на Python",
+      "Разработка веб-приложений",
+      "Работа с базами данных",
+      "Разработка и настройка CI/CD-пайплайнов",
+      "Анализ и оптимизация производительности приложений",
+      "Разработка и поддержка Python-библиотек",
+      "Разработка и настройка веб-технологий"
     ],
     "technical_challenges": [
-      "Решение проблем с базами данных",
-      "Работа с сетевыми технологиями",
-      "Разработка приложений на Python",
-      "Работа с Docker и Kubernetes",
-      "Работа с GitLab CI",
-      "Работа с Linux"
+      "Решение проблем с производительностью приложений",
+      "Разработка приложений для различных платформ",
+      "Разработка приложений с использованием баз данных",
+      "Разработка приложений с использованием веб-технологий",
+      "Разработка приложений с использованием Python-библиотек"
     ],
     "interview_topics": [
-      "Какие проекты вы уже реализовали на Python?",
-      "Как вы используете контейнеризацию (Docker, Kubernetes)?",
-      "Как вы решаете проблемы с базами данных (PostgreSQL)?",
-      "Как вы работаете с сетевыми технологиями (RabbitMQ, Redis)?",
-      "Как вы используете GitLab CI для управления проектами?"
+      "Опыт работы с Python",
+      "Опыт работы с базами данных",
+      "Опыт работы с веб-технологиями",
+      "Опыт работы с CI/CD-пайплайнами",
+      "Опыт работы с Python-библиотеками",
+      "Опыт работы с аналитикой данных",
+      "Опыт работы с тестированием"
     ],
     "persona_context": [
-      "Вы работаете в команде разработчиков на Python",
-      "Вы работаете в контексте облачных вычислений (Docker, Kubernetes)",
-      "Вы работаете с базами данных (PostgreSQL)",
-      "Вы работаете с сетевыми технологиями (RabbitMQ, Redis)",
-      "Вы работаете с системой управления версиями (GitLab CI)"
+      "Разработка приложения для мобильного устройства",
+      "Разработка приложения для веб-сайта",
+      "Разработка приложения для серверной части сайта",
+      "Разработка приложения для аналитических целей",
+      "Разработка приложения для автоматизации бизнес-процессов"
     ]
   }
 }
