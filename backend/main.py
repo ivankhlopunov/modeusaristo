@@ -1,3 +1,4 @@
+
 from contextlib import asynccontextmanager
 from typing import Literal
 
@@ -33,7 +34,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="ModeusAristo API",
-    description="API для работы с данными о профессиях и AI-агентами",
+    description="API для работы с данными о профессиях и AI-агентах",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -121,18 +122,13 @@ def get_profession(profession: str):
     vacancies_data = get_vacancies(profession, limit=10)
     discussions_data = get_discussions(profession, limit=20)
 
-    if knowledge is None and not vacancies_data and not discussions_data:
-        raise HTTPException(
-            status_code=404,
-            detail="Данные о профессии не найдены"
-        )
-
     return {
-        "profession": profession,
-        "knowledge_base": knowledge,
+        "profession": {
+            "name": profession
+        },
         "vacancies": vacancies_data or [],
         "forum_discussions": discussions_data or [],
-        "updated_at": knowledge.get("updated_at") if knowledge else None
+        "knowledge_base": knowledge
     }
 
 
