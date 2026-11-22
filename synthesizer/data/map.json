@@ -1,0 +1,191 @@
+{
+  "profession": "Python Developer",
+  "version": 1,
+  "data_mode": "mock",
+  "nodes": [
+    {
+      "id": "28beaabc-3691-4b73-859f-c3ec3d7e6c02",
+      "parent_id": null,
+      "kind": "profession",
+      "title": "Python Developer",
+      "operationality": "non_operational",
+      "evidence": {
+        "evidence_message_ids": [],
+        "evidence_source_ids": [
+          "mock-vacancy-001",
+          "mock-forum-001"
+        ],
+        "quotes": []
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "e3bedd36-1f8a-44ce-aa17-a83d153b6f1f",
+      "parent_id": "28beaabc-3691-4b73-859f-c3ec3d7e6c02",
+      "kind": "function",
+      "title": "Разработка и поддержка программных решений",
+      "operationality": "uncertain",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-001",
+          "msg-002",
+          "msg-003"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "Я разрабатываю простые API на Python.",
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему.",
+          "После этого исправляю код и запускаю тесты."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [
+        "Функция сформирована по ключевым словам. Требуется проверка методологом."
+      ],
+      "evidence_status": "active"
+    },
+    {
+      "id": "a0307f1e-562b-4f28-b1c8-d207d0db3625",
+      "parent_id": "e3bedd36-1f8a-44ce-aa17-a83d153b6f1f",
+      "kind": "task",
+      "title": "Разрабатывать простые API",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-001",
+          "msg-002"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "Я разрабатываю простые API на Python.",
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
+      "parent_id": "e3bedd36-1f8a-44ce-aa17-a83d153b6f1f",
+      "kind": "task",
+      "title": "Диагностировать и исправлять ошибки",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-002",
+          "msg-003"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему.",
+          "После этого исправляю код и запускаю тесты."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "e7913dd9-7960-4cb9-a24e-2480a1a461c3",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
+      "kind": "action",
+      "title": "Изучать логи",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-002"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "c4715559-0ac4-429c-bc52-11f4db74bdc4",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
+      "kind": "action",
+      "title": "Воспроизводить проблему",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-002"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "Когда API возвращает ошибку, я изучаю логи и воспроизвожу проблему."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "5900005c-215a-4143-8e15-1112eea35cf3",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
+      "kind": "action",
+      "title": "Исправлять код",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-003"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "После этого исправляю код и запускаю тесты."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    },
+    {
+      "id": "537bcda2-b313-4c88-bd2f-aaa2060537a2",
+      "parent_id": "afa2d120-2955-4afc-bad6-d9e4ef7dea2c",
+      "kind": "action",
+      "title": "Запускать тесты",
+      "operationality": "operational",
+      "evidence": {
+        "evidence_message_ids": [
+          "msg-003"
+        ],
+        "evidence_source_ids": [],
+        "quotes": [
+          "После этого исправляю код и запускаю тесты."
+        ]
+      },
+      "review_status": "needs_review",
+      "is_mock": true,
+      "review_notes": [],
+      "evidence_status": "active"
+    }
+  ],
+  "available_message_ids": [
+    "msg-001",
+    "msg-002",
+    "msg-003"
+  ],
+  "available_source_ids": [
+    "mock-vacancy-001",
+    "mock-forum-001"
+  ],
+  "transcript_version": 2,
+  "scout_warnings": [
+    "Все записи демонстрационные, не получены с hh.ru или форумов."
+  ],
+  "scout_data_mode": "mock",
+  "validation_errors": []
+}
