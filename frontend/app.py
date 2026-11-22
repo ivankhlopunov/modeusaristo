@@ -1,25 +1,6 @@
 import streamlit as st
-import uuid
 
-from api import (
-    send_request,
-    get_professions,
-    get_vacancies,
-    get_discussions,
-    get_knowledge_base
-)
-
-from database import (
-    create_tables,
-    create_interview,
-    save_message,
-    load_messages,
-    get_latest_interview,
-    update_message,
-    mark_following_stale
-)
-
-
+# Настройки страницы
 st.set_page_config(
     page_title="Исследование профессий",
     page_icon="🔎",
@@ -69,177 +50,122 @@ st.write(
     "Мультиагентная система исследования профессий"
 )
 
-st.write(
-    f"Завершено раундов: {st.session_state.rounds_used} / 4"
+# Поле для ввода профессии
+profession = st.text_input(
+    "Введите название профессии",
+    placeholder="Например: Разработчик ПО"
 )
 
+# Дополнительное описание
+description = st.text_area(
+    "Дополнительное описание (необязательно)"
+)
 
-# История интервью
-st.subheader("История интервью")
+# Кнопка запуска исследования
+if st.button("Начать исследование"):
 
-for i, message in enumerate(st.session_state.messages):
+    if st.button("Начать исследование"):
 
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+        if not profession.strip():
+            st.warning("Введите название профессии.")
 
-        if message.get("stale", False):
-            st.caption("Устаревшее сообщение")
-
-        if message["role"] == "user":
-            if st.button("Редактировать", key=f"edit_{i}"):
-                st.session_state.editing_message = i
-                st.rerun()
-
-
-# Редактирование сообщения
-if st.session_state.editing_message is not None:
-
-    i = st.session_state.editing_message
-
-    st.subheader("Редактирование сообщения")
-
-    edited_text = st.text_area(
-        "Исправьте текст",
-        value=st.session_state.messages[i]["content"],
-        key=f"edited_text_{i}"
-    )
-
-    if st.button("Сохранить изменения"):
-
-        if edited_text.strip():
-
-            st.session_state.messages[i]["content"] = edited_text.strip()
-
-            update_message(
-                st.session_state.messages[i]["id"],
-                edited_text.strip()
+        else:
+            st.success(
+                f"Начинаем исследование профессии «{profession}»."
             )
 
-            for message in st.session_state.messages[i + 1:]:
-                message["stale"] = True
+        with st.spinner("Scout собирает информацию..."):
 
-            mark_following_stale(
-                st.session_state.interview_id,
-                st.session_state.messages[i]["id"]
-            )
+            try:
 
-            st.session_state.editing_message = None
-            st.rerun()
+                # Отправляем запрос Scout
+                response = requests.post(
+                    SCOUT_URL,
+                    json={
+                        "profession": profession.strip(),
+                    },
+                    timeout=30
+                )
 
-    if st.button("Отмена"):
-        st.session_state.editing_message = None
-        st.rerun()
+                # Проверяем HTTP-ошибки
+                response.raise_for_status()
 
+                # Получаем JSON
+                scout_data = response.json()
 
-# Источники информации
-if st.session_state.sources:
+                st.success(
+                    f"Scout завершил исследование профессии «{profession}»."
+                )
 
-    st.subheader("Источники информации")
+                # Предупреждение о тестовых данных
+                if scout_data.get("data_mode") == "mock":
 
-    for source in st.session_state.sources:
-        st.write(source)
+                    st.info(
+                        "Сейчас используются демонстрационные данные Scout."
+                    )
 
+                # Показываем вакансии
+                st.subheader("Найденные вакансии")
 
-# Поле ответа пользователя
-user_message = st.chat_input("Введите ваш ответ...")
+                vacancies = scout_data.get("vacancies", [])
 
-if user_message:
+                for vacancy in vacancies:
 
-    message_id = save_message(
-        st.session_state.interview_id,
-        "user",
-        user_message
-    )
+                    with st.expander(
+                        vacancy.get("name", "Без названия")
+                    ):
 
-    st.session_state.messages.append({
-        "id": message_id,
-        "role": "user",
-        "content": user_message,
-        "stale": False
-    })
+                        st.write(
+                            "Компания:",
+                            vacancy.get("company")
+                        )
 
-    st.rerun()
+                        st.write(
+                            "Навыки:",
+                            vacancy.get("skills", [])
+                        )
 
+                        st.write(
+                            "Требования:",
+                            vacancy.get("requirements", [])
+                        )
 
-# Данные о профессии
-st.subheader("Данные о профессии")
+                        st.write(
+                            "Обязанности:",
+                            vacancy.get("responsibilities", [])
+                        )
 
-professions = get_professions()
+                # Показываем обсуждения
+                st.subheader("Профессиональные обсуждения")
 
-if professions:
+                discussions = scout_data.get(
+                    "forum_discussions", []
+                )
 
-    profession = st.selectbox(
-        "Выберите профессию",
-        professions
-    )
+                for discussion in discussions:
 
-    level = st.selectbox(
-        "Выберите уровень специалиста",
-        ["Junior", "Middle", "Senior"]
-    )
+                    with st.expander(
+                        discussion.get("title", "Обсуждение")
+                    ):
 
-else:
+                        st.write(
+                            discussion.get("text", "")
+                        )
 
-    profession = None
-    level = None
+                        st.write(
+                            "Вопросы:",
+                            discussion.get("questions", [])
+                        )
 
-    st.error(
-        "Не удалось получить список профессий из FastAPI."
-    )
+                # Полный JSON для разработчиков
+                with st.expander("Посмотреть полный JSON Scout"):
 
+                    st.json(scout_data)
 
-# Загрузка данных профессии
-if profession and st.button(
-    "Загрузить данные профессии",
-    key="load_profession_data"
-):
+            except requests.RequestException as error:
 
-    vacancies = get_vacancies(profession)
-    discussions = get_discussions(profession)
-    knowledge_base = get_knowledge_base(profession)
+                st.error(
+                    "Не удалось подключиться к Scout."
+                )
 
-    st.subheader("Вакансии")
-
-    if vacancies is not None:
-        st.write(f"Найдено вакансий: {len(vacancies)}")
-        st.json(vacancies)
-    else:
-        st.error("Не удалось загрузить вакансии.")
-
-    st.subheader("Обсуждения")
-
-    if discussions is not None:
-        st.write(f"Найдено обсуждений: {len(discussions)}")
-        st.json(discussions)
-    else:
-        st.error("Не удалось загрузить обсуждения.")
-
-    st.subheader("База знаний")
-
-    if knowledge_base is not None:
-        st.json(knowledge_base)
-    else:
-        st.error("Не удалось загрузить базу знаний.")
-
-
-# Начало исследования
-if profession and level and st.button(
-    "Начать исследование",
-    key="start_research"
-):
-
-    result = send_request(
-        profession,
-        level
-    )
-
-    if result:
-
-        st.success("Ответ успешно получен!")
-        st.json(result)
-
-    else:
-
-        st.error(
-            "Не удалось получить ответ от сервера."
-        )
+                st.code(str(error))
